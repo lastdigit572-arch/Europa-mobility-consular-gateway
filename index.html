@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EUROPA MOBILITY & CONSULAR GATEWAY (EMCG) | Official Schengen Work & Dossier Portal</title>
+    <title>EUROPA MOBILITY &amp; CONSULAR GATEWAY (EMCG) | Official Schengen Work &amp; Dossier Portal</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -565,13 +565,13 @@
                     <button onclick="openClientLoginModal()" class="px-3 py-2 rounded-lg text-sm font-semibold text-euBlue hover:bg-blue-50 transition cursor-pointer" data-i18n="navCheckStatus">Check Passport File</button>
                 </nav>
 
-                <!-- Client Login & Admin Portal Buttons -->
+                <!-- Client Login & Hidden Admin Portal Button -->
                 <div class="flex items-center gap-2">
                     <button onclick="openClientLoginModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-euNavy bg-euGold hover:bg-euGoldHover shadow-sm transition cursor-pointer">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                         <span data-i18n="btnClientLogin">Client Login</span>
                     </button>
-                    <button onclick="openAdminLoginModal()" data-admin-portal-trigger="true" class="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold text-white bg-euNavy hover:bg-euBlue shadow-sm transition cursor-pointer">
+                    <button onclick="openAdminLoginModal()" data-admin-portal-trigger="true" style="display:none;" class="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold text-white bg-euNavy hover:bg-euBlue shadow-sm transition cursor-pointer">
                         <svg class="w-4 h-4 text-euGold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                         <span class="hidden sm:inline" data-i18n="btnAdmin">Admin Portal</span>
                     </button>
@@ -853,7 +853,7 @@
                     <span class="text-[10px] font-bold uppercase tracking-widest text-euGold">MANDATORY FINALIZATION PROTOCOL</span>
                     <h3 class="font-display font-bold text-lg">Complete Verification Steps to Lock &amp; Confirm Your Application</h3>
                 </div>
-                <span id="workflow-progress-text" class="text-xs font-bold bg-white/15 px-3 py-1 rounded-full">Step 1 of 4</span>
+                <span id="workflow-progress-text" class="text-xs font-bold bg-white/15 px-3 py-1 rounded-full">Completed 1 of 4</span>
             </div>
 
             <div class="p-6 sm:p-8 space-y-8">
@@ -988,7 +988,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 4: CONDITIONAL PAYMENT GATEWAY -->
+                <!-- STEP 4: CONDITIONAL PAYMENT GATEWAY WITH ACCOUNT NUMBER EDITOR -->
                 <div id="step4-payment-container" class="border border-slate-200 rounded-2xl p-5 space-y-4">
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <h4 class="font-display font-bold text-base text-euNavy flex items-center gap-2">
@@ -1000,11 +1000,39 @@
                         </span>
                     </div>
 
+                    <!-- Dedicated Account Number Editor Box -->
+                    <div id="emcg-client-account-editor-box" class="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 space-y-3 text-xs">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <span class="font-extrabold uppercase tracking-wider text-euBlue text-[10px] block">PAYMENT ACCOUNT NUMBER EDITOR</span>
+                                <strong class="text-euNavy text-sm">Receiving / Settlement Account Number &amp; Details</strong>
+                            </div>
+                            <button type="button" onclick="emcgResetAccountEditorToAdminDefault()" class="bg-white hover:bg-slate-100 border border-blue-200 text-euBlue font-bold px-3 py-1.5 rounded-xl text-[11px] cursor-pointer">
+                                ↺ Reset to Assigned Account
+                            </button>
+                        </div>
+                        <div class="grid sm:grid-cols-3 gap-3">
+                            <div>
+                                <label class="font-bold text-slate-600 block mb-1">Account / Wallet / IBAN / Hundi No.</label>
+                                <input type="text" id="cp-editor-account-number" oninput="emcgSyncClientAccountEditor()" placeholder="Enter or edit account number" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-mono font-bold text-euNavy">
+                            </div>
+                            <div>
+                                <label class="font-bold text-slate-600 block mb-1">Account Holder / Receiver Name</label>
+                                <input type="text" id="cp-editor-account-holder" oninput="emcgSyncClientAccountEditor()" placeholder="Receiver / Holder name" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-semibold text-euNavy">
+                            </div>
+                            <div>
+                                <label class="font-bold text-slate-600 block mb-1">Currency &amp; Route</label>
+                                <input type="text" id="cp-editor-currency-route" oninput="emcgSyncClientAccountEditor()" placeholder="e.g. EUR / BDT / INR" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-bold text-euBlue">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="grid md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs">
                         <div class="space-y-2">
                             <label class="font-bold text-euNavy block">Select Payment Channel *</label>
                             <select id="cp-pay-channel" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2.5 font-bold text-euNavy">
                                 <option value="bKash / Nagad Mobile Merchant">📱 bKash / Nagad Mobile Banking (+880 1700-889922)</option>
+                                <option value="Hundi / Agent Settlement">🤝 Hundi / Direct Agent Settlement</option>
                                 <option value="India UPI / IMPS">🇮🇳 India UPI / GPay (emcg.eu@icici)</option>
                                 <option value="International Visa / Mastercard">💳 International Debit / Credit Card</option>
                                 <option value="EU SEPA / SWIFT Bank Transfer">🏛️ EU SEPA IBAN (DE89 3704 0044 0532 0130 00)</option>
@@ -1041,7 +1069,7 @@
     </section>
 
     <!-- ===================================================================== -->
-    <!-- VIEW 3: ADMIN CONTROL DASHBOARD (PASSWORD PROTECTED: admin123)        -->
+    <!-- VIEW 3: ADMIN CONTROL DASHBOARD (HIDDEN BY DEFAULT, PASSWORD: admin123) -->
     <!-- ===================================================================== -->
     <section id="admin-dashboard-view" class="hidden py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div class="bg-euNavy text-white rounded-3xl p-6 flex flex-wrap items-center justify-between gap-4 shadow-lg">
@@ -1053,8 +1081,8 @@
                 <button onclick="openCreateClientModal()" class="bg-euGold hover:bg-euGoldHover text-euNavy font-extrabold px-4 py-2.5 rounded-xl text-xs shadow cursor-pointer">
                     + Create New Applicant Profile
                 </button>
-                <button onclick="showPublicPortal()" class="bg-white/15 hover:bg-white/25 text-white font-bold px-4 py-2.5 rounded-xl text-xs cursor-pointer">
-                    Exit Admin
+                <button onclick="lockAndExitAdmin()" class="bg-white/15 hover:bg-white/25 text-white font-bold px-4 py-2.5 rounded-xl text-xs cursor-pointer">
+                    Lock &amp; Exit Admin
                 </button>
             </div>
         </div>
@@ -1062,7 +1090,7 @@
         <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
             <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
                 <h3 class="font-display font-bold text-base text-euNavy">Registered Client Profiles (Passport-Locked)</h3>
-                <span class="text-xs text-slate-500">Click "Manage / Approve" to inspect biometrics, upload stage files, or approve.</span>
+                <span class="text-xs text-slate-500">Click "Manage / Approve" to inspect biometrics, edit account numbers, upload stage files, or approve.</span>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-xs">
@@ -1071,7 +1099,7 @@
                             <th class="py-3.5 px-4">Applicant &amp; Passport</th>
                             <th class="py-3.5 px-4">PIN</th>
                             <th class="py-3.5 px-4">Country &amp; Employer</th>
-                            <th class="py-3.5 px-4">Payment Switch</th>
+                            <th class="py-3.5 px-4">Payment &amp; Account</th>
                             <th class="py-3.5 px-4">Biometric &amp; Status</th>
                             <th class="py-3.5 px-4 text-right">Admin Actions</th>
                         </tr>
@@ -1196,7 +1224,7 @@
 
                 <div>
                     <label class="font-bold text-slate-600 block mb-1">Company Full Biodata &amp; Worker Facilities</label>
-                    <textarea id="new-c-biodata" rows="2" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2">Licensed European hospitality & culinary employer with 120+ branches. Full-time 40 hrs/week contract with 100% free company apartment, 2 duty meals/day, and statutory EU health insurance.</textarea>
+                    <textarea id="new-c-biodata" rows="2" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2">Licensed European hospitality &amp; culinary employer with 120+ branches. Full-time 40 hrs/week contract with 100% free company apartment, 2 duty meals/day, and statutory EU health insurance.</textarea>
                 </div>
 
                 <!-- TIMER (2 TO 4 HOURS) & PAYMENT ON/OFF CONTROL -->
@@ -1237,7 +1265,7 @@
         </div>
     </div>
 
-    <!-- Manage Client Dossier, Upload Stage Documents & Approve Modal (Admin) -->
+    <!-- Manage Client Dossier, Account Number Editor, Upload Stage Documents & Approve Modal (Admin) -->
     <div id="manage-client-modal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-slate-200">
             <div class="bg-euNavy px-6 py-4 text-white flex items-center justify-between sticky top-0 z-10">
@@ -1251,6 +1279,28 @@
                 <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2">
                     <div class="font-extrabold text-euNavy uppercase">Client Submitted Verification &amp; Payment Audit</div>
                     <div id="mng-audit-details" class="space-y-1 text-slate-700"></div>
+                </div>
+
+                <!-- Admin Account Number Editor -->
+                <div class="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 space-y-3">
+                    <div class="font-extrabold text-euNavy uppercase">Edit Payment Account Number &amp; Settlement Details</div>
+                    <div class="grid sm:grid-cols-3 gap-2.5">
+                        <div>
+                            <label class="font-bold text-slate-600 block mb-1">Account / Wallet / IBAN No.</label>
+                            <input type="text" id="mng-acc-number" placeholder="e.g. 017XXXXXXXX / IBAN" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-mono font-bold text-euNavy">
+                        </div>
+                        <div>
+                            <label class="font-bold text-slate-600 block mb-1">Account Holder Name</label>
+                            <input type="text" id="mng-acc-holder" placeholder="Holder name" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-semibold">
+                        </div>
+                        <div>
+                            <label class="font-bold text-slate-600 block mb-1">Fee Amount</label>
+                            <input type="text" id="mng-fee-amount" placeholder="e.g. €150.00" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-bold text-euEmerald">
+                        </div>
+                    </div>
+                    <button type="button" onclick="adminSaveAccountEditor()" class="bg-euNavy hover:bg-euBlue text-euGold font-extrabold px-4 py-2 rounded-xl text-xs cursor-pointer">
+                        Save Payment Account Number ✓
+                    </button>
                 </div>
 
                 <div class="grid sm:grid-cols-2 gap-3">
@@ -1538,7 +1588,8 @@
 
         function changeLanguage(lang) {
             localStorage.setItem('emcg_lang', lang);
-            document.getElementById('language-switcher').value = lang;
+            const switcher = document.getElementById('language-switcher');
+            if (switcher) switcher.value = lang;
             document.documentElement.lang = lang;
             document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
 
@@ -1587,7 +1638,8 @@
         // =====================================================================
         // 3. CLIENT DOSSIER DATABASE (PERSISTED IN LOCALSTORAGE)
         // =====================================================================
-        const STORAGE_KEY = 'emcg_client_dossiers_v3';
+        const STORAGE_KEY = 'emcg_client_dossiers_v4';
+        const ADMIN_SESSION_KEY = 'emcg_admin_unlocked_v2';
 
         function getDefaultClients() {
             return {
@@ -1596,6 +1648,11 @@
                     pin: '8842',
                     name: 'TANVIR AHMED CHOWDHURY',
                     nationality: 'Bangladesh',
+                    religion: 'Islam',
+                    maritalStatus: 'Unmarried (অবিবাহিত)',
+                    dateOfBirth: '1998-05-14',
+                    mobileNumber: '+880 1711-223344',
+                    permanentAddress: 'House 14, Road 07, Dhanmondi, Dhaka-1205, Bangladesh',
                     country: 'Germany',
                     flag: '🇩🇪',
                     visaType: 'National Type-D Work Permit',
@@ -1609,6 +1666,9 @@
                     facilities: '100% Free Furnished Company Apartment + 2 Duty Meals/Day + German Statutory Health Insurance',
                     feeAmount: '€150.00',
                     paymentRequired: true,
+                    paymentAccountNumber: 'DE89 3704 0044 0532 0130 00',
+                    paymentAccountHolder: 'EMCG Consular Settlement Desk',
+                    paymentCurrencyRoute: 'EUR (€) / SEPA / bKash',
                     deadlineTimestamp: Date.now() + (3 * 3600 * 1000) + (45 * 60 * 1000),
                     photoDataUrl: '',
                     status: 'AWAITING_CONFIRMATION',
@@ -1616,6 +1676,7 @@
                     fingerprintHash: null,
                     faceVerified: false,
                     paymentTrx: null,
+                    rejectionReason: '',
                     documents: [
                         { title: '1. Passport & Bio-Data Verified Copy', note: 'OCR & Validity Verified (18+ Months)', date: '2026-11-22' },
                         { title: '2. Europass CV & Police Clearance', note: 'Attested & Pre-Audited', date: '2026-11-22' },
@@ -1659,21 +1720,29 @@
         // =====================================================================
         document.addEventListener('DOMContentLoaded', () => {
             loadDB();
+            initAdminStealth();
             const savedLang = localStorage.getItem('emcg_lang') || 'en';
             changeLanguage(savedLang);
             startCETClock();
             populateCountryDropdowns();
             renderSchengenStates();
             renderEmployers();
+            mountLandingEntryView();
+            mountExistingApplicantBox();
+            mountAdminSteps1To6();
+            mountClientDetailsStep();
         });
 
         function startCETClock() {
             const tick = () => {
                 try {
-                    document.getElementById('cet-clock').textContent =
-                        new Date().toLocaleTimeString('en-GB', { timeZone: 'Europe/Brussels', hour12: false }) + ' CET';
+                    const el = document.getElementById('cet-clock');
+                    if (el) {
+                        el.textContent = new Date().toLocaleTimeString('en-GB', { timeZone: 'Europe/Brussels', hour12: false }) + ' CET';
+                    }
                 } catch (e) {
-                    document.getElementById('cet-clock').textContent = new Date().toTimeString().slice(0, 8);
+                    const el = document.getElementById('cet-clock');
+                    if (el) el.textContent = new Date().toTimeString().slice(0, 8);
                 }
             };
             tick();
@@ -1682,6 +1751,7 @@
 
         function showToast(msg) {
             const el = document.getElementById('toast');
+            if (!el) return;
             el.textContent = msg;
             el.classList.remove('hidden');
             clearTimeout(window.__emcgToastTimer);
@@ -1692,20 +1762,22 @@
             const empSel = document.getElementById('employer-country-select');
             const newCSel = document.getElementById('new-c-country');
             schengenStates.forEach(s => {
-                empSel.add(new Option(`${s.flag} ${s.name}`, s.name));
-                newCSel.add(new Option(`${s.flag} ${s.name}`, s.name));
+                if (empSel) empSel.add(new Option(`${s.flag} ${s.name}`, s.name));
+                if (newCSel) newCSel.add(new Option(`${s.flag} ${s.name}`, s.name));
             });
         }
 
         function renderSchengenStates() {
-            const q = document.getElementById('schengen-search').value.toLowerCase().trim();
-            const reg = document.getElementById('schengen-region').value;
+            const q = (document.getElementById('schengen-search')?.value || '').toLowerCase().trim();
+            const reg = document.getElementById('schengen-region')?.value || 'ALL';
             const list = schengenStates.filter(s =>
                 (reg === 'ALL' || s.region === reg) &&
                 (s.name.toLowerCase().includes(q) || s.restaurants.toLowerCase().includes(q) || s.companies.toLowerCase().includes(q))
             );
 
-            document.getElementById('schengen-grid').innerHTML = list.map(s => `
+            const grid = document.getElementById('schengen-grid');
+            if (!grid) return;
+            grid.innerHTML = list.map(s => `
                 <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm hover:shadow-md hover:border-euBlue transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-2">
@@ -1733,14 +1805,16 @@
         }
 
         function filterEmployersByCountry(name) {
-            document.getElementById('employer-country-select').value = name;
+            const sel = document.getElementById('employer-country-select');
+            if (sel) sel.value = name;
             renderEmployers();
-            document.getElementById('employers-directory').scrollIntoView({ behavior: 'smooth' });
+            const sec = document.getElementById('employers-directory');
+            if (sec) sec.scrollIntoView({ behavior: 'smooth' });
         }
 
         function renderEmployers() {
-            const cFilter = document.getElementById('employer-country-select').value;
-            const sFilter = document.getElementById('employer-sector-select').value;
+            const cFilter = document.getElementById('employer-country-select')?.value || 'ALL';
+            const sFilter = document.getElementById('employer-sector-select')?.value || 'ALL';
             const statesToBuild = cFilter === 'ALL' ? schengenStates.slice(0, 12) : schengenStates.filter(s => s.name === cFilter);
 
             let cards = [];
@@ -1765,7 +1839,9 @@
                 }
             });
 
-            document.getElementById('employers-grid').innerHTML = cards.map(emp => `
+            const grid = document.getElementById('employers-grid');
+            if (!grid) return;
+            grid.innerHTML = cards.map(emp => `
                 <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-lg transition flex flex-col justify-between space-y-4">
                     <div class="space-y-3">
                         <div class="flex items-center justify-between">
@@ -1818,7 +1894,8 @@
         }
 
         function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
         }
 
         function showPublicPortal() {
@@ -1913,6 +1990,13 @@
             `).join('');
 
             document.getElementById('cp-fee-amount').textContent = c.feeAmount;
+            const accNumInp = document.getElementById('cp-editor-account-number');
+            const accHolderInp = document.getElementById('cp-editor-account-holder');
+            const accCurrInp = document.getElementById('cp-editor-currency-route');
+            if (accNumInp) accNumInp.value = c.paymentAccountNumber || '';
+            if (accHolderInp) accHolderInp.value = c.paymentAccountHolder || '';
+            if (accCurrInp) accCurrInp.value = c.paymentCurrencyRoute || 'EUR (€)';
+
             if (c.paymentRequired) {
                 document.getElementById('step4-payment-container').classList.remove('hidden');
                 document.getElementById('step4-payment-waived-box').classList.add('hidden');
@@ -1925,8 +2009,35 @@
             sessionFingerprintOk = !!c.fingerprintHash;
             sessionFaceOk = !!c.faceVerified;
 
+            if (typeof window.populateClientDetailsFromRecord === 'function') {
+                window.populateClientDetailsFromRecord();
+            }
+            if (typeof window.applyDelightfulPortfolioStyling === 'function') {
+                window.applyDelightfulPortfolioStyling();
+            }
+
             updateStatusUI(c);
             startClientCountdown(c);
+        }
+
+        function emcgSyncClientAccountEditor() {
+            const c = clientDB[activeClientPassport];
+            if (!c) return;
+            c.paymentAccountNumber = (document.getElementById('cp-editor-account-number')?.value || '').trim();
+            c.paymentAccountHolder = (document.getElementById('cp-editor-account-holder')?.value || '').trim();
+            c.paymentCurrencyRoute = (document.getElementById('cp-editor-currency-route')?.value || '').trim();
+            saveDB();
+        }
+
+        function emcgResetAccountEditorToAdminDefault() {
+            const c = clientDB[activeClientPassport];
+            if (!c) return;
+            const fallbackAcc = 'DE89 3704 0044 0532 0130 00';
+            c.paymentAccountNumber = c.adminAssignedAccountNumber || fallbackAcc;
+            const inp = document.getElementById('cp-editor-account-number');
+            if (inp) inp.value = c.paymentAccountNumber;
+            saveDB();
+            showToast('Account number reset to assigned settlement account.');
         }
 
         function updateStatusUI(c) {
@@ -2178,6 +2289,8 @@
                 return;
             }
 
+            emcgSyncClientAccountEditor();
+
             let trxInfo = 'WAIVED / SETTLED OFFLINE BY ADMIN';
             if (c.paymentRequired) {
                 const trx = document.getElementById('cp-pay-trxid').value.trim();
@@ -2186,7 +2299,8 @@
                     showToast('Step 4 Mandatory: Please enter your Payment Transaction ID.');
                     return;
                 }
-                trxInfo = `${ch} • TrxID: ${trx.toUpperCase()}`;
+                const accPart = c.paymentAccountNumber ? ` [Acct: ${c.paymentAccountNumber}]` : '';
+                trxInfo = `${ch}${accPart} • TrxID: ${trx.toUpperCase()}`;
             }
 
             c.healthData = `${document.getElementById('health-fitness').value} | ${document.getElementById('health-bmi').value} | ${document.getElementById('health-vision').value} | ${document.getElementById('health-chronic').value}`;
@@ -2202,9 +2316,63 @@
         }
 
         // =====================================================================
-        // 8. ADMIN PORTAL: CREATE CLIENT, TOGGLE PAYMENT, UPLOAD DOCS, APPROVE
+        // 8. ADMIN PORTAL (HIDDEN FROM PUBLIC VIEW, UNLOCK VIA SHORTCUT/HASH)
         // =====================================================================
+        function setAdminBodyState(isUnlocked) {
+            if (isUnlocked) {
+                document.body.classList.add('emcg-admin-authenticated');
+                try { sessionStorage.setItem(ADMIN_SESSION_KEY, '1'); } catch (e) {}
+            } else {
+                document.body.classList.remove('emcg-admin-authenticated');
+                try { sessionStorage.removeItem(ADMIN_SESSION_KEY); } catch (e) {}
+            }
+            hideAdminTriggersFromPublic();
+        }
+
+        function hideAdminTriggersFromPublic() {
+            const isUnlocked = document.body.classList.contains('emcg-admin-authenticated');
+            document.querySelectorAll('[data-admin-portal-trigger="true"]').forEach((el) => {
+                el.style.display = isUnlocked ? '' : 'none';
+            });
+        }
+
+        window.emcgRevealAdminLogin = function () {
+            setAdminBodyState(true);
+            openAdminLoginModal();
+        };
+
+        function lockAndExitAdmin() {
+            setAdminBodyState(false);
+            showPublicPortal();
+            showToast('Admin session locked.');
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+                e.preventDefault();
+                window.emcgRevealAdminLogin();
+            }
+        });
+
+        function checkSecretHash() {
+            if (window.location.hash === '#admin-access') {
+                window.emcgRevealAdminLogin();
+            }
+        }
+
+        function initAdminStealth() {
+            let persistedUnlock = false;
+            try {
+                persistedUnlock = sessionStorage.getItem(ADMIN_SESSION_KEY) === '1';
+            } catch (e) {}
+            setAdminBodyState(persistedUnlock);
+            checkSecretHash();
+        }
+
+        window.addEventListener('hashchange', checkSecretHash);
+
         function openAdminLoginModal() {
+            setAdminBodyState(true);
             document.getElementById('admin-login-modal').classList.remove('hidden');
         }
 
@@ -2214,8 +2382,7 @@
                 showToast('Incorrect Admin Password.');
                 return;
             }
-            document.body.classList.add('emcg-admin-authenticated');
-            try { sessionStorage.setItem('emcg_admin_unlocked_v1', '1'); } catch (e) {}
+            setAdminBodyState(true);
             closeModal('admin-login-modal');
             stopCountdown();
             document.getElementById('public-portal-view').classList.add('hidden');
@@ -2243,6 +2410,7 @@
                         <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${c.paymentRequired ? 'bg-blue-50 text-euBlue border border-blue-200' : 'bg-slate-100 text-slate-600'}">
                             ${c.paymentRequired ? 'ON (' + c.feeAmount + ')' : 'OFF (Waived)'}
                         </span>
+                        <div class="font-mono text-[10px] text-slate-500 mt-1">${c.paymentAccountNumber || 'No Account Set'}</div>
                     </td>
                     <td class="py-3.5 px-4">
                         <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${
@@ -2259,6 +2427,9 @@
                     </td>
                 </tr>
             `).join('');
+
+            if (typeof window.emcgEnhanceAdminPanel === 'function') window.emcgEnhanceAdminPanel();
+            if (typeof window.emcgRenderAdminApprovalControls === 'function') window.emcgRenderAdminApprovalControls();
         }
 
         function openCreateClientModal() {
@@ -2282,13 +2453,25 @@
             const hours = parseFloat(document.getElementById('new-c-timer').value) || 3;
             const payReq = document.getElementById('new-c-payreq').value === 'true';
             const photoInput = document.getElementById('new-c-photo');
+            const step6Acc = (document.getElementById('emcg-step6-account')?.value || '').trim() || 'DE89 3704 0044 0532 0130 00';
+            const step6Holder = (document.getElementById('emcg-step6-holder')?.value || '').trim() || 'EMCG Consular Settlement Desk';
+            const step6Curr = document.getElementById('emcg-step6-currency')?.value || 'EUR';
+            const step6Method = document.getElementById('emcg-step6-method')?.value || 'SEPA / Bank';
 
             const finalizeSave = (photoUrl) => {
                 clientDB[passport] = {
                     passport: passport,
                     pin: pin,
                     name: name,
-                    nationality: document.getElementById('new-c-nationality').value.trim() || 'Bangladesh',
+                    nationality: document.getElementById('emcg-step1-nationality')?.value.trim() || document.getElementById('new-c-nationality').value.trim() || 'Bangladesh',
+                    religion: '',
+                    maritalStatus: '',
+                    dateOfBirth: document.getElementById('emcg-step1-dob')?.value || '',
+                    mobileNumber: document.getElementById('emcg-step1-mobile')?.value.trim() || '',
+                    permanentAddress: document.getElementById('emcg-step1-permanent-address')?.value.trim() || '',
+                    currentLocation: document.getElementById('emcg-step1-current-location')?.value.trim() || '',
+                    hasWorkExperience: document.getElementById('emcg-step3-has-exp')?.value || 'YES',
+                    workExperienceDetails: document.getElementById('emcg-step3-exp-desc')?.value.trim() || '',
                     country: state.name,
                     flag: state.flag,
                     visaType: document.getElementById('new-c-visatype').value.trim(),
@@ -2302,6 +2485,10 @@
                     facilities: 'Free Staff Accommodation + Daily Duty Meals + Statutory EU Health Insurance',
                     feeAmount: document.getElementById('new-c-fee').value.trim() || '€150.00',
                     paymentRequired: payReq,
+                    paymentAccountNumber: step6Acc,
+                    adminAssignedAccountNumber: step6Acc,
+                    paymentAccountHolder: step6Holder,
+                    paymentCurrencyRoute: `${step6Curr} • ${step6Method}`,
                     deadlineTimestamp: Date.now() + (hours * 3600 * 1000),
                     photoDataUrl: photoUrl,
                     status: 'AWAITING_CONFIRMATION',
@@ -2309,6 +2496,7 @@
                     fingerprintHash: null,
                     faceVerified: false,
                     paymentTrx: null,
+                    rejectionReason: '',
                     documents: [
                         { title: '1. Passport & Bio-Data Verified Copy', note: 'Submitted & Pre-Verified by Admin', date: new Date().toISOString().slice(0, 10) }
                     ]
@@ -2339,8 +2527,16 @@
                 ? 'Payment Gateway: ON (Click to Turn OFF)'
                 : 'Payment Gateway: OFF (Click to Turn ON)';
 
+            const accNumEl = document.getElementById('mng-acc-number');
+            const accHolderEl = document.getElementById('mng-acc-holder');
+            const feeEl = document.getElementById('mng-fee-amount');
+            if (accNumEl) accNumEl.value = c.paymentAccountNumber || '';
+            if (accHolderEl) accHolderEl.value = c.paymentAccountHolder || '';
+            if (feeEl) feeEl.value = c.feeAmount || '€150.00';
+
             document.getElementById('mng-audit-details').innerHTML = `
                 <div><strong>Status:</strong> ${c.status}</div>
+                <div><strong>Payment Account:</strong> <span class="font-mono">${c.paymentAccountNumber || 'N/A'}</span> (${c.paymentAccountHolder || 'N/A'})</div>
                 <div><strong>Health Declaration:</strong> ${c.healthData || 'Not submitted yet'}</div>
                 <div><strong>Fingerprint Biometric:</strong> ${c.fingerprintHash || 'Pending touch scan'}</div>
                 <div><strong>Live Face Match:</strong> ${c.faceVerified ? '✓ Matched with Application Photo' : 'Pending face match'}</div>
@@ -2358,6 +2554,29 @@
             document.getElementById('manage-client-modal').classList.remove('hidden');
         }
 
+        function adminSaveAccountEditor() {
+            const c = clientDB[managingPassport];
+            if (!c) return;
+            const newAcc = (document.getElementById('mng-acc-number')?.value || '').trim();
+            const newHolder = (document.getElementById('mng-acc-holder')?.value || '').trim();
+            const newFee = (document.getElementById('mng-fee-amount')?.value || '').trim();
+
+            if (newAcc) {
+                c.paymentAccountNumber = newAcc;
+                c.adminAssignedAccountNumber = newAcc;
+            }
+            if (newHolder) c.paymentAccountHolder = newHolder;
+            if (newFee) c.feeAmount = newFee;
+
+            saveDB();
+            openManageClientModal(managingPassport);
+            renderAdminTable();
+            if (window.activeClientPassport === managingPassport) {
+                renderClientProfile(c);
+            }
+            showToast('Updated payment account number & fee details.');
+        }
+
         function adminTogglePaymentRequirement() {
             const c = clientDB[managingPassport];
             if (!c) return;
@@ -2365,6 +2584,9 @@
             saveDB();
             openManageClientModal(managingPassport);
             renderAdminTable();
+            if (window.activeClientPassport === managingPassport) {
+                renderClientProfile(c);
+            }
             showToast(`Payment requirement is now ${c.paymentRequired ? 'ON' : 'OFF'} for ${c.name}`);
         }
 
@@ -2519,98 +2741,18 @@
         })();
     </script>
 
-    <!-- PATCH #3 SCRIPT: LANDING ENTRY VIEW -->
+    <!-- PATCH #3 SCRIPT: LANDING ENTRY VIEW (PLACED AFTER HERO SO HERO STAYS ON TOP) -->
     <script id="emcg-patch-3-script">
         (function () {
             const emcgFeaturedJobs = [
-                {
-                    id: 'JOB-DE-01',
-                    country: 'Germany',
-                    flag: '🇩🇪',
-                    company: 'Nordsee GmbH Culinary Group',
-                    role: 'Sous Chef & Kitchen Specialist',
-                    sector: 'Restaurant & Culinary',
-                    salary: '€2,350 / month net',
-                    benefits: 'Free Company Apartment + 2 Duty Meals + Health Insurance',
-                    visaRoute: 'National Type-D Work Permit / Opportunity & Skilled Route'
-                },
-                {
-                    id: 'JOB-NL-02',
-                    country: 'Netherlands',
-                    flag: '🇳🇱',
-                    company: 'Van der Valk Hospitality & Dining',
-                    role: 'Restaurant Captain & Culinary Staff',
-                    sector: 'Restaurant & Culinary',
-                    salary: '€2,250 / month net',
-                    benefits: 'Accommodation Support + Meal Allowance + Dutch Pension',
-                    visaRoute: 'GVVA Single Work & Residence Permit'
-                },
-                {
-                    id: 'JOB-SE-03',
-                    country: 'Sweden',
-                    flag: '🇸🇪',
-                    company: 'Scania Industrial & Supply Operations',
-                    role: 'Production & Logistics Technician',
-                    sector: 'Industrial & Logistics',
-                    salary: '€2,450 / month net',
-                    benefits: 'Collective Agreement + Paid Vacation + Healthcare',
-                    visaRoute: 'Swedish Work Permit (Migrationsverket)'
-                },
-                {
-                    id: 'JOB-PL-04',
-                    country: 'Poland',
-                    flag: '🇵🇱',
-                    company: 'AmRest Holdings & Sphinx Dining',
-                    role: 'Chef de Partie & Food Service Lead',
-                    sector: 'Restaurant & Culinary',
-                    salary: '€1,420 / month net',
-                    benefits: 'Staff Housing + Duty Meals + ZUS Social Coverage',
-                    visaRoute: 'Type-D National Work Visa + Voivodeship Permit'
-                },
-                {
-                    id: 'JOB-DK-05',
-                    country: 'Denmark',
-                    flag: '🇩🇰',
-                    company: 'ISS Facility & Catering Services',
-                    role: 'Hospitality & Facility Specialist',
-                    sector: 'Restaurant & Culinary',
-                    salary: '€2,650 / month net',
-                    benefits: 'Danish Labor Contract + Holiday Pay + Insurance',
-                    visaRoute: 'Danish Fast-Track / Work Scheme'
-                },
-                {
-                    id: 'JOB-IT-06',
-                    country: 'Italy',
-                    flag: '🇮🇹',
-                    company: 'Autogrill S.p.A. & Eataly Hospitality',
-                    role: 'Pastry / Kitchen Assistant & Steward',
-                    sector: 'Restaurant & Culinary',
-                    salary: '€1,580 / month net',
-                    benefits: 'Contractual Salary + Meal Benefit + INPS Coverage',
-                    visaRoute: 'Decreto Flussi Nulla Osta + Type-D Visa'
-                },
-                {
-                    id: 'JOB-AT-07',
-                    country: 'Austria',
-                    flag: '🇦🇹',
-                    company: 'Do & Co Catering & Hospitality',
-                    role: 'Culinary & Event Operations Specialist',
-                    sector: 'Restaurant & Culinary',
-                    salary: '€2,120 / month net',
-                    benefits: '14 Salaries/Year Standard + Meals + Health Coverage',
-                    visaRoute: 'Red-White-Red Card / Skilled Worker Route'
-                },
-                {
-                    id: 'JOB-NO-08',
-                    country: 'Norway',
-                    flag: '🇳🇴',
-                    company: 'Mowi Seafood & Coastal Processing',
-                    role: 'Processing & Cold-Chain Operator',
-                    sector: 'Industrial & Logistics',
-                    salary: '€2,780 / month net',
-                    benefits: 'Norwegian Wage Standard + Pension + Insurance',
-                    visaRoute: 'UDI Skilled / Seasonal Work Permit'
-                }
+                { id: 'JOB-DE-01', country: 'Germany', flag: '🇩🇪', company: 'Nordsee GmbH Culinary Group', role: 'Sous Chef & Kitchen Specialist', sector: 'Restaurant & Culinary', salary: '€2,350 / month net', benefits: 'Free Company Apartment + 2 Duty Meals + Health Insurance', visaRoute: 'National Type-D Work Permit / Opportunity & Skilled Route' },
+                { id: 'JOB-NL-02', country: 'Netherlands', flag: '🇳🇱', company: 'Van der Valk Hospitality & Dining', role: 'Restaurant Captain & Culinary Staff', sector: 'Restaurant & Culinary', salary: '€2,250 / month net', benefits: 'Accommodation Support + Meal Allowance + Dutch Pension', visaRoute: 'GVVA Single Work & Residence Permit' },
+                { id: 'JOB-SE-03', country: 'Sweden', flag: '🇸🇪', company: 'Scania Industrial & Supply Operations', role: 'Production & Logistics Technician', sector: 'Industrial & Logistics', salary: '€2,450 / month net', benefits: 'Collective Agreement + Paid Vacation + Healthcare', visaRoute: 'Swedish Work Permit (Migrationsverket)' },
+                { id: 'JOB-PL-04', country: 'Poland', flag: '🇵🇱', company: 'AmRest Holdings & Sphinx Dining', role: 'Chef de Partie & Food Service Lead', sector: 'Restaurant & Culinary', salary: '€1,420 / month net', benefits: 'Staff Housing + Duty Meals + ZUS Social Coverage', visaRoute: 'Type-D National Work Visa + Voivodeship Permit' },
+                { id: 'JOB-DK-05', country: 'Denmark', flag: '🇩🇰', company: 'ISS Facility & Catering Services', role: 'Hospitality & Facility Specialist', sector: 'Restaurant & Culinary', salary: '€2,650 / month net', benefits: 'Danish Labor Contract + Holiday Pay + Insurance', visaRoute: 'Danish Fast-Track / Work Scheme' },
+                { id: 'JOB-IT-06', country: 'Italy', flag: '🇮🇹', company: 'Autogrill S.p.A. & Eataly Hospitality', role: 'Pastry / Kitchen Assistant & Steward', sector: 'Restaurant & Culinary', salary: '€1,580 / month net', benefits: 'Contractual Salary + Meal Benefit + INPS Coverage', visaRoute: 'Decreto Flussi Nulla Osta + Type-D Visa' },
+                { id: 'JOB-AT-07', country: 'Austria', flag: '🇦🇹', company: 'Do & Co Catering & Hospitality', role: 'Culinary & Event Operations Specialist', sector: 'Restaurant & Culinary', salary: '€2,120 / month net', benefits: '14 Salaries/Year Standard + Meals + Health Coverage', visaRoute: 'Red-White-Red Card / Skilled Worker Route' },
+                { id: 'JOB-NO-08', country: 'Norway', flag: '🇳🇴', company: 'Mowi Seafood & Coastal Processing', role: 'Processing & Cold-Chain Operator', sector: 'Industrial & Logistics', salary: '€2,780 / month net', benefits: 'Norwegian Wage Standard + Pension + Insurance', visaRoute: 'UDI Skilled / Seasonal Work Permit' }
             ];
 
             function escapeHtml(str) {
@@ -2637,15 +2779,10 @@
                     );
                 });
 
-                if (countBadge) {
-                    countBadge.textContent = filtered.length + ' Verified Openings Found';
-                }
+                if (countBadge) countBadge.textContent = filtered.length + ' Verified Openings Found';
 
                 if (filtered.length === 0) {
-                    container.innerHTML =
-                        `<div class="col-span-full bg-white border border-slate-200 rounded-2xl p-6 text-center text-xs text-slate-600">
-                            No matching company job found for "<strong>${escapeHtml(q)}</strong>". Try searching <strong>Germany</strong>, <strong>Chef</strong>, <strong>Sweden</strong>, <strong>Logistics</strong>, or <strong>Italy</strong>.
-                        </div>`;
+                    container.innerHTML = `<div class="col-span-full bg-white border border-slate-200 rounded-2xl p-6 text-center text-xs text-slate-600">No matching company job found for "<strong>${escapeHtml(q)}</strong>". Try searching <strong>Germany</strong>, <strong>Chef</strong>, <strong>Sweden</strong>, <strong>Logistics</strong>, or <strong>Italy</strong>.</div>`;
                     return;
                 }
 
@@ -2665,9 +2802,7 @@
                             </div>
                             <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
                                 <span class="font-mono text-[10px] text-slate-400">${escapeHtml(job.id)}</span>
-                                <button type="button" onclick="window.emcgToggleNewApplicantPanel(true)" class="bg-euNavy hover:bg-euBlue text-white font-bold px-3 py-1.5 rounded-xl text-[11px] cursor-pointer">
-                                    Application Rules →
-                                </button>
+                                <button type="button" onclick="window.emcgToggleNewApplicantPanel(true)" class="bg-euNavy hover:bg-euBlue text-white font-bold px-3 py-1.5 rounded-xl text-[11px] cursor-pointer">Application Rules →</button>
                             </div>
                         </div>
                     `;
@@ -2686,7 +2821,7 @@
                 }
             };
 
-            function mountLandingEntryView() {
+            window.mountLandingEntryView = function () {
                 const publicMain = document.getElementById('public-portal-view');
                 if (!publicMain || document.getElementById('emcg-landing-entry-section')) return;
 
@@ -2816,12 +2951,8 @@
 
                             <div class="flex flex-col sm:flex-row gap-2.5">
                                 <input type="text" id="emcg-landing-job-search-input" oninput="window.emcgRunLandingJobSearch()" placeholder="Search Schengen country, company, or job title (e.g. Germany, Chef, Sweden, Logistics)..." class="flex-1 bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-sm font-medium text-euNavy focus:outline-none focus:ring-2 focus:ring-euBlue">
-                                <button type="button" onclick="window.emcgRunLandingJobSearch()" class="bg-euNavy hover:bg-euBlue text-white font-bold px-6 py-3 rounded-2xl text-sm transition cursor-pointer">
-                                    🔍 Search Jobs
-                                </button>
-                                <button type="button" onclick="window.emcgResetLandingJobSearch()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-3 rounded-2xl text-sm transition cursor-pointer">
-                                    Reset
-                                </button>
+                                <button type="button" onclick="window.emcgRunLandingJobSearch()" class="bg-euNavy hover:bg-euBlue text-white font-bold px-6 py-3 rounded-2xl text-sm transition cursor-pointer">🔍 Search Jobs</button>
+                                <button type="button" onclick="window.emcgResetLandingJobSearch()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-3 rounded-2xl text-sm transition cursor-pointer">Reset</button>
                             </div>
 
                             <div id="emcg-landing-jobs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
@@ -2829,7 +2960,12 @@
                     </div>
                 `;
 
-                publicMain.insertBefore(entrySection, publicMain.firstChild);
+                const heroSec = document.getElementById('top');
+                if (heroSec && heroSec.nextSibling) {
+                    publicMain.insertBefore(entrySection, heroSec.nextSibling);
+                } else {
+                    publicMain.appendChild(entrySection);
+                }
 
                 window.emcgRunLandingJobSearch = function () {
                     const inp = document.getElementById('emcg-landing-job-search-input');
@@ -2843,29 +2979,14 @@
                 };
 
                 renderLandingJobs('');
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', mountLandingEntryView);
-            } else {
-                mountLandingEntryView();
-            }
+            };
         })();
     </script>
 
     <!-- PATCH #4 SCRIPT: EXISTING APPLICANT VERIFICATION & CONFIRMATION BOX -->
     <script id="emcg-patch-4-script">
         (function () {
-            function openOriginalClientLogin() {
-                if (typeof window.openClientLoginModal === 'function') {
-                    window.openClientLoginModal();
-                    return;
-                }
-                const modal = document.getElementById('client-login-modal');
-                if (modal) modal.classList.remove('hidden');
-            }
-
-            function mountExistingApplicantBox() {
+            window.mountExistingApplicantBox = function () {
                 const publicMain = document.getElementById('public-portal-view');
                 if (!publicMain || document.getElementById('emcg-existing-applicant-box')) return;
 
@@ -2901,7 +3022,7 @@
                                 </div>
                             </div>
                             <div class="lg:col-span-4 flex flex-col items-stretch lg:items-end justify-center gap-2.5">
-                                <button type="button" id="emcg-open-client-login-cta" class="emcg-client-login-trigger w-full lg:w-auto text-xs sm:text-sm cursor-pointer flex items-center justify-center gap-2">
+                                <button type="button" onclick="openClientLoginModal()" class="emcg-client-login-trigger w-full lg:w-auto text-xs sm:text-sm cursor-pointer flex items-center justify-center gap-2">
                                     <span>🔐 Client Login — Verify &amp; Confirm</span>
                                     <span>→</span>
                                 </button>
@@ -2916,73 +3037,33 @@
                 const landingEntry = document.getElementById('emcg-landing-entry-section');
                 if (landingEntry && landingEntry.nextSibling) {
                     publicMain.insertBefore(wrap, landingEntry.nextSibling);
-                } else if (landingEntry) {
-                    publicMain.appendChild(wrap);
                 } else {
-                    publicMain.insertBefore(wrap, publicMain.firstChild);
+                    publicMain.appendChild(wrap);
                 }
-
-                const btn = document.getElementById('emcg-open-client-login-cta');
-                if (btn) btn.addEventListener('click', openOriginalClientLogin);
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', mountExistingApplicantBox);
-            } else {
-                mountExistingApplicantBox();
-            }
+            };
         })();
     </script>
 
     <!-- PATCH #5 SCRIPT: ADMIN PANEL ENHANCEMENT -->
     <script id="emcg-patch-5-script">
         (function () {
-            function getSafeClientDB() {
-                if (typeof window.clientDB === 'object' && window.clientDB !== null) {
-                    return window.clientDB;
-                }
-                try {
-                    const raw = localStorage.getItem('emcg_client_dossiers_v3');
-                    return raw ? JSON.parse(raw) : {};
-                } catch (e) {
-                    return {};
-                }
-            }
-
-            function persistSafeDB() {
-                if (typeof window.saveDB === 'function') {
-                    window.saveDB();
-                } else {
-                    try {
-                        localStorage.setItem('emcg_client_dossiers_v3', JSON.stringify(getSafeClientDB()));
-                    } catch (e) {}
-                }
-            }
-
             window.emcgQuickTogglePayment = function (passport) {
-                const db = getSafeClientDB();
-                const client = db[passport];
+                const client = window.clientDB && window.clientDB[passport];
                 if (!client) return;
                 client.paymentRequired = !client.paymentRequired;
-                persistSafeDB();
-                if (typeof window.renderAdminTable === 'function') window.renderAdminTable();
-                window.emcgEnhanceAdminPanel();
-                if (typeof window.showToast === 'function') {
-                    window.showToast('Payment (' + passport + ') is now ' + (client.paymentRequired ? 'ON' : 'OFF'));
-                }
+                saveDB();
+                renderAdminTable();
+                showToast('Payment (' + passport + ') is now ' + (client.paymentRequired ? 'ON' : 'OFF'));
             };
 
             window.emcgCustomResetTimer = function (passport) {
-                const db = getSafeClientDB();
-                const client = db[passport];
+                const client = window.clientDB && window.clientDB[passport];
                 if (!client) return;
                 const input = prompt('Enter new confirmation timer in hours (e.g. 2, 3, 4):', '4');
                 if (input === null) return;
                 const hours = parseFloat(input);
                 if (isNaN(hours) || hours <= 0) {
-                    if (typeof window.showToast === 'function') {
-                        window.showToast('Please enter a valid positive number of hours.');
-                    }
+                    showToast('Please enter a valid positive number of hours.');
                     return;
                 }
                 client.deadlineTimestamp = Date.now() + hours * 3600 * 1000;
@@ -2990,12 +3071,9 @@
                     client.status = 'AWAITING_CONFIRMATION';
                     client.rejectionReason = '';
                 }
-                persistSafeDB();
-                if (typeof window.renderAdminTable === 'function') window.renderAdminTable();
-                window.emcgEnhanceAdminPanel();
-                if (typeof window.showToast === 'function') {
-                    window.showToast('Timer set to ' + hours + 'h for ' + passport);
-                }
+                saveDB();
+                renderAdminTable();
+                showToast('Timer set to ' + hours + 'h for ' + passport);
             };
 
             window.emcgFilterAdminRows = function () {
@@ -3012,8 +3090,7 @@
             };
 
             function updateAdminStats() {
-                const db = getSafeClientDB();
-                const list = Object.values(db);
+                const list = Object.values(window.clientDB || {});
                 const setText = (id, val) => {
                     const el = document.getElementById(id);
                     if (el) el.textContent = String(val);
@@ -3025,7 +3102,7 @@
             }
 
             function decorateAdminTableRows() {
-                const db = getSafeClientDB();
+                const db = window.clientDB || {};
                 const rows = document.querySelectorAll('#admin-clients-tbody tr');
 
                 rows.forEach((tr) => {
@@ -3074,11 +3151,7 @@
                         <div class="emcg-admin-stat-card"><div class="text-[11px] font-bold uppercase text-slate-400">Payment Gate ON</div><div id="emcg-stat-payon" class="font-display text-2xl font-extrabold text-amber-600 mt-1">0</div></div>
                     `;
                     const tableCard = adminSection.querySelector('.bg-white.rounded-3xl');
-                    if (tableCard) {
-                        adminSection.insertBefore(statsRow, tableCard);
-                    } else {
-                        adminSection.appendChild(statsRow);
-                    }
+                    if (tableCard) adminSection.insertBefore(statsRow, tableCard);
                 }
 
                 const tableCard = adminSection.querySelector('.bg-white.rounded-3xl');
@@ -3109,26 +3182,10 @@
                 decorateAdminTableRows();
                 window.emcgFilterAdminRows();
             };
-
-            if (typeof window.renderAdminTable === 'function' && !window.renderAdminTable.__emcgWrapped) {
-                const originalRenderAdminTable = window.renderAdminTable;
-                const wrapped = function () {
-                    originalRenderAdminTable.apply(this, arguments);
-                    window.emcgEnhanceAdminPanel();
-                };
-                wrapped.__emcgWrapped = true;
-                window.renderAdminTable = wrapped;
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', window.emcgEnhanceAdminPanel);
-            } else {
-                window.emcgEnhanceAdminPanel();
-            }
         })();
     </script>
 
-    <!-- PATCH #6 SCRIPT: ADMIN CLIENT STEPS 1 TO 6 + DOB, ADDRESS & MOBILE -->
+    <!-- PATCH #6 SCRIPT: ADMIN CLIENT STEPS 1 TO 6 -->
     <script id="emcg-patch-6-script">
         (function () {
             const visaPresets = [
@@ -3146,22 +3203,6 @@
                     { name: 'Nordsee GmbH Culinary Group', type: 'Restaurant & Culinary', reg: 'HRB-64120-DE', city: 'Munich & Hamburg', salary: '€2,350.00 / Month Net', biodata: 'Licensed German seafood & culinary restaurant chain with 350+ locations. Full-time staff contract with free furnished housing, 2 daily duty meals, and statutory EU health coverage.' },
                     { name: 'Block House Restaurantbetriebe AG', type: 'Restaurant & Culinary', reg: 'HRB-19044-DE', city: 'Hamburg', salary: '€2,280.00 / Month Net', biodata: 'Renowned German steakhouse & culinary enterprise providing structured kitchen & dining shifts, meal perks, and housing support.' },
                     { name: 'DHL Supply Chain & Logistics GmbH', type: 'Corporate & Logistics', reg: 'HRB-81209-DE', city: 'Frankfurt & Leipzig', salary: '€2,420.00 / Month Net', biodata: 'Major European logistics & warehouse operations employer with tariff-based wages, shift allowance, and full social insurance.' }
-                ],
-                France: [
-                    { name: 'Groupe Bertrand Hospitality & Dining', type: 'Restaurant & Culinary', reg: 'RCS-441902-FR', city: 'Paris', salary: '€1,950.00 / Month Net', biodata: 'Leading French restaurant & brasserie group offering formal employment contracts, meal tickets, and social security.' },
-                    { name: 'Paul Boulangerie & Culinary', type: 'Restaurant & Culinary', reg: 'RCS-510884-FR', city: 'Lyon', salary: '€1,880.00 / Month Net', biodata: 'Traditional French bakery & cafe operations hiring skilled bakery, pastry, and kitchen personnel.' }
-                ],
-                Italy: [
-                    { name: 'Autogrill & Eataly Hospitality S.p.A.', type: 'Restaurant & Culinary', reg: 'REA-MI-20941', city: 'Milan & Rome', salary: '€1,650.00 / Month Net', biodata: 'Major Italian hospitality & culinary operator with national collective contract, meal support, and residence permit sponsorship.' },
-                    { name: 'Fincantieri Marine & Industrial', type: 'Corporate & Logistics', reg: 'REA-TS-11840', city: 'Trieste', salary: '€1,820.00 / Month Net', biodata: 'Established Italian industrial & maritime engineering group with structured work schedules and health benefits.' }
-                ],
-                Sweden: [
-                    { name: 'Scania Industrial & Supply Operations', type: 'Corporate & Logistics', reg: 'SE-556084-01', city: 'Södertälje & Stockholm', salary: '€2,500.00 / Month Net', biodata: 'Swedish industrial & supply chain leader offering collective agreement pay, housing guidance, and full healthcare.' },
-                    { name: 'Max Burgers & Nordic Dining AB', type: 'Restaurant & Culinary', reg: 'SE-556641-19', city: 'Stockholm & Gothenburg', salary: '€2,320.00 / Month Net', biodata: 'Well-known Swedish restaurant chain with transparent employment terms, paid leave, and pension.' }
-                ],
-                Netherlands: [
-                    { name: 'Van der Valk Hospitality & Dining', type: 'Restaurant & Culinary', reg: 'KVK-34109821', city: 'Amsterdam & Utrecht', salary: '€2,290.00 / Month Net', biodata: 'Dutch hotel & restaurant group offering GVVA permit sponsorship, accommodation assistance, and meal allowances.' },
-                    { name: 'Albert Heijn Supply & Distribution', type: 'Corporate & Logistics', reg: 'KVK-27140988', city: 'Zaandam & Rotterdam', salary: '€2,360.00 / Month Net', biodata: 'Large-scale Dutch retail logistics & distribution operator with structured shift compensation.' }
                 ]
             };
 
@@ -3170,49 +3211,20 @@
                 const cleanName = countryName || 'Schengen';
                 const code = cleanName.slice(0, 2).toUpperCase();
                 return [
-                    {
-                        name: `${cleanName} Grand Hospitality & Restaurant Group`,
-                        type: 'Restaurant & Culinary',
-                        reg: `REG-${code}-7741`,
-                        city: `${cleanName} Central City`,
-                        salary: '€1,950.00 / Month Net',
-                        biodata: `Verified hospitality & restaurant employer in ${cleanName} providing full-time contract, staff accommodation, daily duty meals, and statutory health coverage.`
-                    },
-                    {
-                        name: `${cleanName} EuroLogistics & Industrial Corp`,
-                        type: 'Corporate & Logistics',
-                        reg: `REG-${code}-8820`,
-                        city: `${cleanName} Industrial Hub`,
-                        salary: '€2,100.00 / Month Net',
-                        biodata: `Licensed industrial & supply logistics enterprise in ${cleanName} with employment contract sponsorship, safety gear, and worker benefits.`
-                    }
+                    { name: `${cleanName} Grand Hospitality & Restaurant Group`, type: 'Restaurant & Culinary', reg: `REG-${code}-7741`, city: `${cleanName} Central City`, salary: '€1,950.00 / Month Net', biodata: `Verified hospitality & restaurant employer in ${cleanName} providing full-time contract, staff accommodation, daily duty meals, and statutory health coverage.` },
+                    { name: `${cleanName} EuroLogistics & Industrial Corp`, type: 'Corporate & Logistics', reg: `REG-${code}-8820`, city: `${cleanName} Industrial Hub`, salary: '€2,100.00 / Month Net', biodata: `Licensed industrial & supply logistics enterprise in ${cleanName} with employment contract sponsorship, safety gear, and worker benefits.` }
                 ];
             }
 
-            function syncPaymentMethodSetup() {
+            window.emcgSyncStep6 = function () {
                 const currency = document.getElementById('emcg-step6-currency')?.value || 'EUR';
-                const method = document.getElementById('emcg-step6-method')?.value || 'Bank Transfer';
-                const accountNo = document.getElementById('emcg-step6-account')?.value.trim() || '';
-                const holder = document.getElementById('emcg-step6-holder')?.value.trim() || '';
-
                 const feeInput = document.getElementById('new-c-fee');
                 if (feeInput) {
-                    if (currency === 'EUR' && !feeInput.value.includes('€')) {
-                        feeInput.value = '€150.00';
-                    } else if (currency === 'INR') {
-                        feeInput.value = '₹13,500';
-                    } else if (currency === 'BDT') {
-                        feeInput.value = '৳18,500';
-                    }
+                    if (currency === 'EUR') feeInput.value = '€150.00';
+                    else if (currency === 'INR') feeInput.value = '₹13,500';
+                    else if (currency === 'BDT') feeInput.value = '৳18,500';
                 }
-
-                window.emcgAdminStep6PaymentConfig = {
-                    currency,
-                    method,
-                    accountNumber: accountNo,
-                    accountHolder: holder
-                };
-            }
+            };
 
             window.emcgSelectVisaPreset = function (value, btnEl) {
                 const visaInput = document.getElementById('new-c-visatype');
@@ -3225,9 +3237,8 @@
                 const hasExp = document.getElementById('emcg-step3-has-exp')?.value === 'YES';
                 const descWrap = document.getElementById('emcg-step3-exp-desc-wrap');
                 if (descWrap) {
-                    if (hasExp) {
-                        descWrap.classList.remove('hidden');
-                    } else {
+                    if (hasExp) descWrap.classList.remove('hidden');
+                    else {
                         descWrap.classList.add('hidden');
                         const txt = document.getElementById('emcg-step3-exp-desc');
                         if (txt) txt.value = 'No prior work experience (Fresher / Entry-Level applicant).';
@@ -3258,40 +3269,22 @@
 
             window.emcgPickCountryCompany = function (idx) {
                 const country = document.getElementById('new-c-country')?.value || 'Germany';
-                const list = getEmployersForCountry(country);
-                const chosen = list[idx];
+                const chosen = getEmployersForCountry(country)[idx];
                 if (!chosen) return;
 
-                const compInput = document.getElementById('new-c-company');
-                if (compInput) compInput.value = chosen.name;
-
-                const regInput = document.getElementById('new-c-reg');
-                if (regInput) regInput.value = `${chosen.reg} • ${chosen.city}`;
-
-                const step5City = document.getElementById('emcg-step5-city');
-                if (step5City) step5City.value = chosen.city;
-
-                const step5Reg = document.getElementById('emcg-step5-reg');
-                if (step5Reg) step5Reg.value = chosen.reg;
-
-                const salaryInput = document.getElementById('new-c-salary');
-                if (salaryInput) salaryInput.value = chosen.salary;
-
-                const biodataArea = document.getElementById('new-c-biodata');
-                if (biodataArea) biodataArea.value = chosen.biodata;
-
-                const box = document.getElementById('emcg-step4-company-dropdown');
-                if (box) box.classList.add('hidden');
-
-                if (typeof window.showToast === 'function') {
-                    window.showToast(`Auto-filled Step 5 Company Reg No., City & Biodata for ${chosen.name}`);
-                }
+                document.getElementById('new-c-company').value = chosen.name;
+                document.getElementById('new-c-reg').value = `${chosen.reg} • ${chosen.city}`;
+                document.getElementById('emcg-step5-city').value = chosen.city;
+                document.getElementById('emcg-step5-reg').value = chosen.reg;
+                document.getElementById('new-c-salary').value = chosen.salary;
+                document.getElementById('new-c-biodata').value = chosen.biodata;
+                document.getElementById('emcg-step4-company-dropdown').classList.add('hidden');
+                showToast(`Auto-filled Step 5 Company Reg No., City & Biodata for ${chosen.name}`);
             };
 
-            function mountAdminSteps1To6() {
+            window.mountAdminSteps1To6 = function () {
                 const createModal = document.getElementById('create-client-modal');
                 if (!createModal || document.getElementById('emcg-admin-steps-1-6')) return;
-
                 const formContainer = createModal.querySelector('.p-6.space-y-4');
                 if (!formContainer) return;
 
@@ -3304,30 +3297,30 @@
                         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                             <div>
                                 <label class="font-bold text-slate-600 block mb-1">Client Nationality</label>
-                                <input type="text" id="emcg-step1-nationality" placeholder="e.g. Bangladeshi, Indian, Pakistani" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-semibold">
+                                <input type="text" id="emcg-step1-nationality" value="Bangladesh" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-semibold">
                             </div>
                             <div>
                                 <label class="font-bold text-slate-600 block mb-1">Current Location (City / Country)</label>
-                                <input type="text" id="emcg-step1-current-location" placeholder="e.g. Dhaka, Bangladesh / Dubai, UAE" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-semibold">
+                                <input type="text" id="emcg-step1-current-location" placeholder="e.g. Dhaka, Bangladesh" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-semibold">
                             </div>
                             <div>
-                                <label class="font-bold text-slate-600 block mb-1">Date of Birth *</label>
+                                <label class="font-bold text-slate-600 block mb-1">Date of Birth</label>
                                 <input type="date" id="emcg-step1-dob" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-bold text-euNavy">
                             </div>
                             <div>
-                                <label class="font-bold text-slate-600 block mb-1">Mobile Number *</label>
+                                <label class="font-bold text-slate-600 block mb-1">Mobile Number</label>
                                 <input type="tel" id="emcg-step1-mobile" placeholder="e.g. +880 17XX-XXXXXX" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-mono font-bold text-euNavy">
                             </div>
                             <div class="sm:col-span-2">
-                                <label class="font-bold text-slate-600 block mb-1">Permanent Address *</label>
-                                <input type="text" id="emcg-step1-permanent-address" placeholder="Village/House, Road, Post Office, Thana/Upazila, District/Postal Code" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-medium text-euNavy">
+                                <label class="font-bold text-slate-600 block mb-1">Permanent Address</label>
+                                <input type="text" id="emcg-step1-permanent-address" placeholder="Village/House, Road, Post Office, District" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-medium text-euNavy">
                             </div>
                         </div>
                     </div>
 
                     <div class="emcg-step-box">
-                        <div class="emcg-step-title"><span class="bg-euNavy text-euGold px-2 py-0.5 rounded-md text-[10px]">STEP 2</span> Visa Category Selector (A–D, Work Permit, Tourist, Student, Visit)</div>
-                        <div id="emcg-step2-visa-chips" class="flex flex-wrap gap-2 mb-2.5">
+                        <div class="emcg-step-title"><span class="bg-euNavy text-euGold px-2 py-0.5 rounded-md text-[10px]">STEP 2</span> Visa Category Selector</div>
+                        <div id="emcg-step2-visa-chips" class="flex flex-wrap gap-2">
                             ${visaPresets.map((v, i) => `
                                 <button type="button" data-visa-idx="${i}" class="emcg-visa-chip ${v.code === 'D' ? 'active' : ''}">
                                     <span>${v.icon}</span><span>${v.label}</span>
@@ -3347,16 +3340,16 @@
                                 </select>
                             </div>
                             <div id="emcg-step3-exp-desc-wrap" class="sm:col-span-2">
-                                <label class="font-bold text-slate-600 block mb-1">Describe Work Experience (Role, Years, Industry)</label>
-                                <input type="text" id="emcg-step3-exp-desc" placeholder="e.g. 3 years kitchen & restaurant chef experience, hotel & catering service" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-medium">
+                                <label class="font-bold text-slate-600 block mb-1">Describe Work Experience</label>
+                                <input type="text" id="emcg-step3-exp-desc" placeholder="e.g. 3 years kitchen & restaurant chef experience" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-medium">
                             </div>
                         </div>
                     </div>
 
                     <div class="emcg-step-box">
-                        <div class="emcg-step-title"><span class="bg-euNavy text-euGold px-2 py-0.5 rounded-md text-[10px]">STEP 4 &amp; STEP 5</span> Country Company/Restaurant Picker &amp; Auto Reg No. / City Biodata</div>
+                        <div class="emcg-step-title"><span class="bg-euNavy text-euGold px-2 py-0.5 rounded-md text-[10px]">STEP 4 &amp; STEP 5</span> Country Company/Restaurant Picker &amp; Auto Reg No. / City</div>
                         <div class="flex items-center justify-between gap-2 mb-2">
-                            <span class="text-[11px] text-slate-600">Select country above, then click the icon button to view serial companies &amp; restaurants:</span>
+                            <span class="text-[11px] text-slate-600">Select country above, then click to view companies &amp; restaurants:</span>
                             <button type="button" onclick="window.emcgToggleCompanyDirectoryList()" class="bg-euNavy hover:bg-euBlue text-euGold font-extrabold px-3.5 py-2 rounded-xl text-[11px] flex items-center gap-1.5 cursor-pointer">
                                 <span>🏢🍽️</span><span>Select Country Company / Restaurant ▼</span>
                             </button>
@@ -3365,55 +3358,51 @@
                         <div class="grid sm:grid-cols-2 gap-3 mt-3">
                             <div>
                                 <label class="font-bold text-slate-600 block mb-1">Step 5 Auto Reg. No.</label>
-                                <input type="text" id="emcg-step5-reg" placeholder="Auto-filled on company selection" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-mono font-bold text-euNavy">
+                                <input type="text" id="emcg-step5-reg" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-mono font-bold text-euNavy">
                             </div>
                             <div>
                                 <label class="font-bold text-slate-600 block mb-1">Step 5 Auto City</label>
-                                <input type="text" id="emcg-step5-city" placeholder="Auto-filled on company selection" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-bold text-euNavy">
+                                <input type="text" id="emcg-step5-city" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-bold text-euNavy">
                             </div>
                         </div>
                     </div>
 
                     <div class="emcg-step-box">
-                        <div class="emcg-step-title"><span class="bg-euNavy text-euGold px-2 py-0.5 rounded-md text-[10px]">STEP 6</span> Payment Method, Currency (EUR / INR / BDT) &amp; Account Number Setup</div>
+                        <div class="emcg-step-title"><span class="bg-euNavy text-euGold px-2 py-0.5 rounded-md text-[10px]">STEP 6</span> Payment Method, Currency &amp; Account Number Editor</div>
                         <div class="grid sm:grid-cols-2 gap-3">
                             <div>
                                 <label class="font-bold text-slate-600 block mb-1">Currency Selection</label>
                                 <select id="emcg-step6-currency" onchange="window.emcgSyncStep6()" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-bold text-euNavy">
                                     <option value="EUR">🇪🇺 European (EUR €)</option>
                                     <option value="INR">🇮🇳 India (INR ₹)</option>
-                                    <option value="BDT">🇧🇩 Bangladesh (BDT ৳ — bKash / Hundi)</option>
+                                    <option value="BDT">🇧🇩 Bangladesh (BDT ৳)</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="font-bold text-slate-600 block mb-1">Payment Method</label>
-                                <select id="emcg-step6-method" onchange="window.emcgSyncStep6()" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-bold text-euNavy">
+                                <select id="emcg-step6-method" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-bold text-euNavy">
                                     <option value="bKash Mobile Merchant">bKash (Bangladesh)</option>
-                                    <option value="Hundi / Agent Settlement">Hundi / Direct Agent Settlement (BD/Intl)</option>
+                                    <option value="Hundi / Agent Settlement">Hundi / Direct Agent Settlement</option>
                                     <option value="India UPI / Bank Transfer">India UPI / Bank Transfer</option>
                                     <option value="EU SEPA / IBAN Transfer">European Bank / SEPA IBAN</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="font-bold text-slate-600 block mb-1">Receiving Account / Wallet / Hundi Ref No.</label>
-                                <input type="text" id="emcg-step6-account" oninput="window.emcgSyncStep6()" placeholder="e.g. 017XXXXXXXX / UPI ID / IBAN / Hundi Code" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-mono font-bold text-euNavy">
+                                <label class="font-bold text-slate-600 block mb-1">Account / Wallet / IBAN / Hundi No.</label>
+                                <input type="text" id="emcg-step6-account" value="DE89 3704 0044 0532 0130 00" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-mono font-bold text-euNavy">
                             </div>
                             <div>
                                 <label class="font-bold text-slate-600 block mb-1">Account Holder / Receiver Name</label>
-                                <input type="text" id="emcg-step6-holder" oninput="window.emcgSyncStep6()" placeholder="e.g. EMCG Consular / Authorized Receiver" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-semibold">
+                                <input type="text" id="emcg-step6-holder" value="EMCG Consular Settlement Desk" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-semibold">
                             </div>
                         </div>
                     </div>
                 `;
 
                 const lastChild = formContainer.lastElementChild;
-                if (lastChild) {
-                    formContainer.insertBefore(panel, lastChild);
-                } else {
-                    formContainer.appendChild(panel);
-                }
+                if (lastChild) formContainer.insertBefore(panel, lastChild);
+                else formContainer.appendChild(panel);
 
-                // Bind visa chip clicks safely
                 panel.querySelectorAll('#emcg-step2-visa-chips .emcg-visa-chip').forEach((btn) => {
                     btn.addEventListener('click', function () {
                         const idx = parseInt(this.dataset.visaIdx, 10);
@@ -3421,156 +3410,52 @@
                         if (preset) window.emcgSelectVisaPreset(preset.value, this);
                     });
                 });
-
-                // Sync nationality & reg/city cleanly
-                const natInput = document.getElementById('new-c-nationality');
-                const s1Nat = document.getElementById('emcg-step1-nationality');
-                if (natInput && s1Nat) {
-                    s1Nat.value = natInput.value;
-                    s1Nat.addEventListener('input', () => { natInput.value = s1Nat.value; });
-                }
-
-                const s5Reg = document.getElementById('emcg-step5-reg');
-                const s5City = document.getElementById('emcg-step5-city');
-                const newReg = document.getElementById('new-c-reg');
-                const syncRegCity = () => {
-                    if (newReg && s5Reg && s5City) {
-                        newReg.value = `${s5Reg.value} • ${s5City.value}`.trim();
-                    }
-                };
-                if (s5Reg) s5Reg.addEventListener('input', syncRegCity);
-                if (s5City) s5City.addEventListener('input', syncRegCity);
-
-                window.emcgSyncStep6 = syncPaymentMethodSetup;
-                syncPaymentMethodSetup();
-
-                if (typeof window.saveNewClientProfile === 'function' && !window.saveNewClientProfile.__emcgStep6Hooked) {
-                    const origSave = window.saveNewClientProfile;
-                    const wrappedSave = function () {
-                        syncPaymentMethodSetup();
-                        origSave.apply(this, arguments);
-
-                        const passport = (document.getElementById('new-c-passport')?.value || '').trim().toUpperCase();
-                        if (passport && window.clientDB && window.clientDB[passport]) {
-                            const c = window.clientDB[passport];
-                            const customNat = document.getElementById('emcg-step1-nationality')?.value.trim();
-                            if (customNat) c.nationality = customNat;
-                            c.currentLocation = document.getElementById('emcg-step1-current-location')?.value.trim() || '';
-                            c.dateOfBirth = document.getElementById('emcg-step1-dob')?.value || '';
-                            c.mobileNumber = document.getElementById('emcg-step1-mobile')?.value.trim() || '';
-                            c.permanentAddress = document.getElementById('emcg-step1-permanent-address')?.value.trim() || '';
-                            c.hasWorkExperience = document.getElementById('emcg-step3-has-exp')?.value || 'YES';
-                            c.workExperienceDetails = document.getElementById('emcg-step3-exp-desc')?.value.trim() || '';
-                            c.paymentSetup = Object.assign({}, window.emcgAdminStep6PaymentConfig || {});
-                            if (typeof window.saveDB === 'function') window.saveDB();
-                            if (typeof window.renderAdminTable === 'function') window.renderAdminTable();
-                        }
-                    };
-                    wrappedSave.__emcgStep6Hooked = true;
-                    window.saveNewClientProfile = wrappedSave;
-                }
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', mountAdminSteps1To6);
-            } else {
-                mountAdminSteps1To6();
-            }
+            };
         })();
     </script>
 
     <!-- PATCH #7 SCRIPT: ADMIN APPROVE / REJECT POWER -->
     <script id="emcg-patch-7-script">
         (function () {
-            function getSafeClientDB() {
-                if (typeof window.clientDB === 'object' && window.clientDB !== null) {
-                    return window.clientDB;
-                }
-                try {
-                    const raw = localStorage.getItem('emcg_client_dossiers_v3');
-                    const parsed = raw ? JSON.parse(raw) : {};
-                    window.clientDB = parsed;
-                    return parsed;
-                } catch (e) {
-                    return {};
-                }
-            }
-
-            function persistSafeDB(db) {
-                window.clientDB = db;
-                if (typeof window.saveDB === 'function') {
-                    window.saveDB();
-                } else {
-                    try {
-                        localStorage.setItem('emcg_client_dossiers_v3', JSON.stringify(db));
-                    } catch (e) {}
-                }
-            }
-
             function refreshViews(passport) {
-                if (typeof window.renderAdminTable === 'function') {
-                    window.renderAdminTable();
-                }
-                window.emcgRenderAdminApprovalControls();
-
-                const db = getSafeClientDB();
+                renderAdminTable();
+                const db = window.clientDB || {};
                 if (window.activeClientPassport === passport && db[passport]) {
-                    if (typeof window.updateStatusUI === 'function') {
-                        window.updateStatusUI(db[passport]);
-                    }
-                    if (typeof window.stopCountdown === 'function' && (db[passport].status === 'APPROVED' || db[passport].status === 'REJECTED')) {
-                        window.stopCountdown();
+                    updateStatusUI(db[passport]);
+                    if (db[passport].status === 'APPROVED' || db[passport].status === 'REJECTED') {
+                        stopCountdown();
                     }
                 }
             }
 
             window.emcgAdminApproveApplication = function (passport) {
-                if (!passport) return;
-                const db = getSafeClientDB();
-                const client = db[passport];
+                const client = window.clientDB && window.clientDB[passport];
                 if (!client) return;
-
                 client.status = 'APPROVED';
-                client.adminApprovalDecision = 'APPROVED';
                 client.rejectionReason = '';
-                client.reviewedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-                persistSafeDB(db);
+                saveDB();
                 refreshViews(passport);
-
-                if (typeof window.showToast === 'function') {
-                    window.showToast('Application APPROVED for ' + (client.name || passport) + '.');
-                }
+                showToast('Application APPROVED for ' + (client.name || passport) + '.');
             };
 
             window.emcgAdminRejectApplication = function (passport) {
-                if (!passport) return;
-                const db = getSafeClientDB();
-                const client = db[passport];
+                const client = window.clientDB && window.clientDB[passport];
                 if (!client) return;
-
-                const defaultReason = client.rejectionReason || 'Application rejected / not approved by Consular Admin.';
                 const reason = prompt(
-                    `Reject / Do Not Approve application for ${client.name || 'Applicant'} (Passport: ${passport}).\nEnter rejection reason:`,
-                    defaultReason
+                    `Reject application for ${client.name || 'Applicant'} (Passport: ${passport}).
+Enter rejection reason:`,
+                    client.rejectionReason || 'Rejected by Consular Admin.'
                 );
                 if (reason === null) return;
-
                 client.status = 'REJECTED';
-                client.adminApprovalDecision = 'REJECTED';
                 client.rejectionReason = reason.trim() || 'Rejected by Consular Admin.';
-                client.reviewedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-                persistSafeDB(db);
+                saveDB();
                 refreshViews(passport);
-
-                if (typeof window.showToast === 'function') {
-                    window.showToast('Application REJECTED for ' + (client.name || passport) + '.');
-                }
+                showToast('Application REJECTED for ' + (client.name || passport) + '.');
             };
 
             window.emcgRenderAdminApprovalControls = function () {
-                const db = getSafeClientDB();
+                const db = window.clientDB || {};
                 const rows = document.querySelectorAll('#admin-clients-tbody tr');
 
                 rows.forEach((tr) => {
@@ -3584,7 +3469,6 @@
 
                     if (statusCell) {
                         statusCell.querySelectorAll('.emcg-submitted-pill, .emcg-reject-reason-tag').forEach((el) => el.remove());
-
                         if (client.status === 'SUBMITTED_FOR_APPROVAL') {
                             const subTag = document.createElement('div');
                             subTag.className = 'emcg-submitted-pill';
@@ -3600,7 +3484,6 @@
 
                     if (actionCell) {
                         actionCell.querySelectorAll('.emcg-patch7-controls').forEach((el) => el.remove());
-
                         const box = document.createElement('div');
                         box.className = 'emcg-patch7-controls emcg-action-group mt-1.5';
 
@@ -3608,7 +3491,7 @@
                         approveBtn.type = 'button';
                         approveBtn.className = 'emcg-btn-approve';
                         approveBtn.textContent = client.status === 'APPROVED' ? '✓ Approved' : '✓ Approve';
-                        approveBtn.addEventListener('click', function (ev) {
+                        approveBtn.addEventListener('click', (ev) => {
                             ev.stopPropagation();
                             window.emcgAdminApproveApplication(passport);
                         });
@@ -3617,7 +3500,7 @@
                         rejectBtn.type = 'button';
                         rejectBtn.className = 'emcg-btn-reject';
                         rejectBtn.textContent = client.status === 'REJECTED' ? '✕ Rejected' : '✕ Reject';
-                        rejectBtn.addEventListener('click', function (ev) {
+                        rejectBtn.addEventListener('click', (ev) => {
                             ev.stopPropagation();
                             window.emcgAdminRejectApplication(passport);
                         });
@@ -3630,158 +3513,26 @@
 
                 const manageModal = document.getElementById('manage-client-modal');
                 if (manageModal) {
-                    const approveModalBtn = manageModal.querySelector('button[onclick*="APPROVED"]');
-                    if (approveModalBtn && !approveModalBtn.dataset.emcgP7Bound) {
-                        approveModalBtn.dataset.emcgP7Bound = 'true';
-                        approveModalBtn.removeAttribute('onclick');
-                        approveModalBtn.addEventListener('click', function () {
-                            if (!window.managingPassport) return;
-                            window.emcgAdminApproveApplication(window.managingPassport);
-                            if (typeof window.closeModal === 'function') window.closeModal('manage-client-modal');
-                        });
-                    }
-
                     const rejectModalBtn = manageModal.querySelector('.emcg-modal-reject-btn');
                     if (rejectModalBtn && !rejectModalBtn.dataset.emcgP7Bound) {
                         rejectModalBtn.dataset.emcgP7Bound = 'true';
-                        rejectModalBtn.addEventListener('click', function () {
+                        rejectModalBtn.addEventListener('click', () => {
                             if (!window.managingPassport) return;
                             window.emcgAdminRejectApplication(window.managingPassport);
-                            if (typeof window.closeModal === 'function') window.closeModal('manage-client-modal');
+                            closeModal('manage-client-modal');
                         });
                     }
                 }
             };
-
-            const tbody = document.getElementById('admin-clients-tbody');
-            if (tbody && !tbody.dataset.emcgP7Observed) {
-                tbody.dataset.emcgP7Observed = 'true';
-                const observer = new MutationObserver(function () {
-                    window.emcgRenderAdminApprovalControls();
-                });
-                observer.observe(tbody, { childList: true });
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', window.emcgRenderAdminApprovalControls);
-            } else {
-                window.emcgRenderAdminApprovalControls();
-            }
-        })();
-    </script>
-
-    <!-- PATCH #8 SCRIPT: HIDE ADMIN PORTAL FROM NON-ADMIN -->
-    <script id="emcg-patch-8-script">
-        (function () {
-            const ADMIN_SESSION_KEY = 'emcg_admin_unlocked_v1';
-
-            function setAdminBodyState(isUnlocked) {
-                if (isUnlocked) {
-                    document.body.classList.add('emcg-admin-authenticated');
-                    try { sessionStorage.setItem(ADMIN_SESSION_KEY, '1'); } catch (e) {}
-                } else {
-                    document.body.classList.remove('emcg-admin-authenticated');
-                    try { sessionStorage.removeItem(ADMIN_SESSION_KEY); } catch (e) {}
-                }
-            }
-
-            function hideAdminTriggersFromPublic() {
-                const isUnlocked = document.body.classList.contains('emcg-admin-authenticated');
-                const triggers = document.querySelectorAll(
-                    'button[onclick*="openAdminLoginModal"], a[onclick*="openAdminLoginModal"]'
-                );
-                triggers.forEach((el) => {
-                    el.setAttribute('data-admin-portal-trigger', 'true');
-                    if (!isUnlocked) {
-                        el.style.display = 'none';
-                    } else {
-                        el.style.display = '';
-                    }
-                });
-            }
-
-            window.emcgRevealAdminLogin = function () {
-                setAdminBodyState(true);
-                hideAdminTriggersFromPublic();
-                if (typeof window.openAdminLoginModal === 'function') {
-                    window.openAdminLoginModal();
-                } else {
-                    const modal = document.getElementById('admin-login-modal');
-                    if (modal) modal.classList.remove('hidden');
-                }
-            };
-
-            document.addEventListener('keydown', function (e) {
-                if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
-                    e.preventDefault();
-                    window.emcgRevealAdminLogin();
-                }
-            });
-
-            function checkSecretHash() {
-                if (window.location.hash === '#admin-access') {
-                    window.emcgRevealAdminLogin();
-                }
-            }
-
-            if (typeof window.showPublicPortal === 'function' && !window.showPublicPortal.__emcgP8Hooked) {
-                const origShowPublic = window.showPublicPortal;
-                const wrappedShowPublic = function () {
-                    origShowPublic.apply(this, arguments);
-                    setAdminBodyState(false);
-                    hideAdminTriggersFromPublic();
-                };
-                wrappedShowPublic.__emcgP8Hooked = true;
-                window.showPublicPortal = wrappedShowPublic;
-            }
-
-            function initAdminStealth() {
-                let persistedUnlock = false;
-                try {
-                    persistedUnlock = sessionStorage.getItem(ADMIN_SESSION_KEY) === '1';
-                } catch (e) {}
-
-                setAdminBodyState(persistedUnlock);
-                hideAdminTriggersFromPublic();
-                checkSecretHash();
-            }
-
-            window.addEventListener('hashchange', checkSecretHash);
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initAdminStealth);
-            } else {
-                initAdminStealth();
-            }
         })();
     </script>
 
     <!-- PATCH #9 SCRIPT: CLIENT PROFILE DETAILS STEP -->
     <script id="emcg-patch-9-script">
         (function () {
-            const religionsList = [
-                'Islam',
-                'Hinduism',
-                'Christianity',
-                'Buddhism',
-                'Sikhism',
-                'Judaism',
-                'Jainism',
-                'Baháʼí',
-                'Other / Non-Religious'
-            ];
-
+            const religionsList = ['Islam', 'Hinduism', 'Christianity', 'Buddhism', 'Sikhism', 'Judaism', 'Jainism', 'Baháʼí', 'Other / Non-Religious'];
             const maritalOptions = ['Unmarried (অবিবাহিত)', 'Married (বিবাহিত)', 'Divorced', 'Widowed'];
-
-            const presetDobList = [
-                '1995-04-12',
-                '1997-08-23',
-                '1998-11-05',
-                '1999-02-18',
-                '2000-06-30',
-                '2001-09-14'
-            ];
-
+            const presetDobList = ['1995-04-12', '1997-08-23', '1998-11-05', '1999-02-18', '2000-06-30', '2001-09-14'];
             const presetAddressList = [
                 'House 14, Road 07, Dhanmondi, Dhaka-1205, Bangladesh',
                 '28 Station Road, Chattogram Sadar, Chattogram-4000, Bangladesh',
@@ -3796,36 +3547,27 @@
                 return window.clientDB[pass];
             }
 
-            function persistClientRecord() {
-                if (typeof window.saveDB === 'function') window.saveDB();
-                if (typeof window.renderAdminTable === 'function') window.renderAdminTable();
-            }
-
             window.emcgSelectReligion = function (rel, btnEl) {
                 const hiddenInp = document.getElementById('emcg-cp-religion-val');
                 if (hiddenInp) hiddenInp.value = rel;
-
                 document.querySelectorAll('#emcg-cp-religion-group .emcg-choice-btn').forEach((b) => b.classList.remove('active'));
                 if (btnEl) btnEl.classList.add('active');
-
                 const client = getActiveClientRecord();
                 if (client) {
                     client.religion = rel;
-                    persistClientRecord();
+                    saveDB();
                 }
             };
 
             window.emcgSelectMaritalStatus = function (statusVal, btnEl) {
                 const hiddenInp = document.getElementById('emcg-cp-marital-val');
                 if (hiddenInp) hiddenInp.value = statusVal;
-
                 document.querySelectorAll('#emcg-cp-marital-group .emcg-choice-btn').forEach((b) => b.classList.remove('active'));
                 if (btnEl) btnEl.classList.add('active');
-
                 const client = getActiveClientRecord();
                 if (client) {
                     client.maritalStatus = statusVal;
-                    persistClientRecord();
+                    saveDB();
                 }
             };
 
@@ -3834,38 +3576,22 @@
                 if (!box) return;
                 const client = getActiveClientRecord();
                 const items = [];
-                if (client && client.dateOfBirth && !presetDobList.includes(client.dateOfBirth)) {
-                    items.push(client.dateOfBirth);
-                }
+                if (client && client.dateOfBirth && !presetDobList.includes(client.dateOfBirth)) items.push(client.dateOfBirth);
                 presetDobList.forEach((d) => items.push(d));
-
                 box.innerHTML = '';
                 items.forEach((dob) => {
                     const btn = document.createElement('button');
                     btn.type = 'button';
                     btn.className = 'emcg-choice-btn';
                     btn.textContent = '📅 ' + dob;
-                    btn.addEventListener('click', () => window.emcgPickAutoDob(dob));
+                    btn.addEventListener('click', () => {
+                        document.getElementById('emcg-cp-dob-input').value = dob;
+                        box.classList.add('hidden');
+                        window.emcgSyncClientDetailsStep();
+                    });
                     box.appendChild(btn);
                 });
                 box.classList.remove('hidden');
-            };
-
-            window.emcgPickAutoDob = function (dob) {
-                const inp = document.getElementById('emcg-cp-dob-input');
-                if (inp) inp.value = dob;
-
-                const box = document.getElementById('emcg-cp-auto-dob-list');
-                if (box) box.classList.add('hidden');
-
-                const client = getActiveClientRecord();
-                if (client) {
-                    client.dateOfBirth = dob;
-                    persistClientRecord();
-                }
-                if (typeof window.showToast === 'function') {
-                    window.showToast('Date of Birth selected: ' + dob);
-                }
             };
 
             window.emcgShowAutoAddressOptions = function () {
@@ -3873,99 +3599,67 @@
                 if (!box) return;
                 const client = getActiveClientRecord();
                 const items = [];
-                if (client && client.permanentAddress && !presetAddressList.includes(client.permanentAddress)) {
-                    items.push(client.permanentAddress);
-                }
+                if (client && client.permanentAddress && !presetAddressList.includes(client.permanentAddress)) items.push(client.permanentAddress);
                 presetAddressList.forEach((a) => items.push(a));
-
                 box.innerHTML = '';
                 items.forEach((addr) => {
                     const btn = document.createElement('button');
                     btn.type = 'button';
                     btn.className = 'emcg-choice-btn text-left';
                     btn.textContent = '📍 ' + addr;
-                    btn.addEventListener('click', () => window.emcgPickAutoAddressText(addr));
+                    btn.addEventListener('click', () => {
+                        document.getElementById('emcg-cp-address-input').value = addr;
+                        box.classList.add('hidden');
+                        window.emcgSyncClientDetailsStep();
+                    });
                     box.appendChild(btn);
                 });
                 box.classList.remove('hidden');
             };
 
-            window.emcgPickAutoAddressText = function (chosen) {
-                const inp = document.getElementById('emcg-cp-address-input');
-                if (inp) inp.value = chosen;
-                const box = document.getElementById('emcg-cp-auto-address-list');
-                if (box) box.classList.add('hidden');
-
-                const client = getActiveClientRecord();
-                if (client) {
-                    client.permanentAddress = chosen;
-                    persistClientRecord();
-                }
-                if (typeof window.showToast === 'function') {
-                    window.showToast('Address selected.');
-                }
-            };
-
             window.emcgSyncClientDetailsStep = function () {
                 const client = getActiveClientRecord();
+                if (!client) return;
                 const nameVal = (document.getElementById('emcg-cp-name-input')?.value || '').trim().toUpperCase();
-                const passVal = (document.getElementById('emcg-cp-passport-input')?.value || '').trim().toUpperCase();
                 const dobVal = document.getElementById('emcg-cp-dob-input')?.value || '';
                 const addrVal = (document.getElementById('emcg-cp-address-input')?.value || '').trim();
                 const relVal = document.getElementById('emcg-cp-religion-val')?.value || '';
                 const marVal = document.getElementById('emcg-cp-marital-val')?.value || '';
 
-                if (client) {
-                    if (nameVal) {
-                        client.name = nameVal;
-                        const wName = document.getElementById('cp-welcome-name');
-                        const cName = document.getElementById('cp-name');
-                        if (wName) wName.textContent = nameVal;
-                        if (cName) cName.textContent = nameVal;
-                    }
-                    if (passVal) {
-                        const cPass = document.getElementById('cp-passport');
-                        if (cPass) cPass.textContent = passVal;
-                        client.verifiedPassportInput = passVal;
-                    }
-                    client.dateOfBirth = dobVal;
-                    client.permanentAddress = addrVal;
-                    client.religion = relVal;
-                    client.maritalStatus = marVal;
-                    persistClientRecord();
+                if (nameVal) {
+                    client.name = nameVal;
+                    document.getElementById('cp-welcome-name').textContent = nameVal;
+                    document.getElementById('cp-name').textContent = nameVal;
                 }
+                client.dateOfBirth = dobVal;
+                client.permanentAddress = addrVal;
+                client.religion = relVal;
+                client.maritalStatus = marVal;
+                saveDB();
+                if (typeof window.applyDelightfulPortfolioStyling === 'function') window.applyDelightfulPortfolioStyling();
             };
 
-            function populateClientDetailsFromRecord() {
+            window.populateClientDetailsFromRecord = function () {
                 const client = getActiveClientRecord();
                 if (!client) return;
 
-                const nameInp = document.getElementById('emcg-cp-name-input');
-                const passInp = document.getElementById('emcg-cp-passport-input');
-                const dobInp = document.getElementById('emcg-cp-dob-input');
-                const addrInp = document.getElementById('emcg-cp-address-input');
+                document.getElementById('emcg-cp-name-input').value = client.name || '';
+                document.getElementById('emcg-cp-passport-input').value = client.passport || '';
+                document.getElementById('emcg-cp-dob-input').value = client.dateOfBirth || '';
+                document.getElementById('emcg-cp-address-input').value = client.permanentAddress || '';
 
-                if (nameInp) nameInp.value = client.name || '';
-                if (passInp) passInp.value = client.verifiedPassportInput || client.passport || '';
-                if (dobInp) dobInp.value = client.dateOfBirth || '';
-                if (addrInp) addrInp.value = client.permanentAddress || '';
+                document.querySelectorAll('#emcg-cp-religion-group .emcg-choice-btn').forEach((b) => {
+                    b.classList.toggle('active', b.dataset.val === client.religion);
+                });
+                document.getElementById('emcg-cp-religion-val').value = client.religion || '';
 
-                if (client.religion) {
-                    const relBtn = Array.from(document.querySelectorAll('#emcg-cp-religion-group .emcg-choice-btn')).find(
-                        (b) => b.dataset.val === client.religion
-                    );
-                    window.emcgSelectReligion(client.religion, relBtn || null);
-                }
+                document.querySelectorAll('#emcg-cp-marital-group .emcg-choice-btn').forEach((b) => {
+                    b.classList.toggle('active', b.dataset.val === client.maritalStatus);
+                });
+                document.getElementById('emcg-cp-marital-val').value = client.maritalStatus || '';
+            };
 
-                if (client.maritalStatus) {
-                    const marBtn = Array.from(document.querySelectorAll('#emcg-cp-marital-group .emcg-choice-btn')).find(
-                        (b) => b.dataset.val === client.maritalStatus
-                    );
-                    window.emcgSelectMaritalStatus(client.maritalStatus, marBtn || null);
-                }
-            }
-
-            function mountClientDetailsStep() {
+            window.mountClientDetailsStep = function () {
                 const workflow = document.getElementById('client-confirmation-workflow');
                 if (!workflow || document.getElementById('emcg-client-details-step-card')) return;
 
@@ -3984,27 +3678,23 @@
                     <div class="grid sm:grid-cols-2 gap-4 text-xs">
                         <div>
                             <label class="font-bold text-euNavy block mb-1">Client Full Name *</label>
-                            <input type="text" id="emcg-cp-name-input" oninput="window.emcgSyncClientDetailsStep()" placeholder="Enter full name as per passport" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 font-bold uppercase text-euNavy">
+                            <input type="text" id="emcg-cp-name-input" oninput="window.emcgSyncClientDetailsStep()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 font-bold uppercase text-euNavy">
                         </div>
                         <div>
                             <label class="font-bold text-euNavy block mb-1">Passport Number *</label>
-                            <input type="text" id="emcg-cp-passport-input" oninput="window.emcgSyncClientDetailsStep()" placeholder="Enter passport number" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 font-mono font-bold uppercase text-euNavy">
+                            <input type="text" id="emcg-cp-passport-input" readonly class="w-full bg-slate-100 border border-slate-300 rounded-xl px-3.5 py-2.5 font-mono font-bold uppercase text-slate-600">
                         </div>
                     </div>
 
                     <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2.5">
-                        <div class="flex items-center justify-between">
-                            <label class="text-xs font-extrabold text-euNavy">Select Religion</label>
-                            <input type="hidden" id="emcg-cp-religion-val" value="">
-                        </div>
+                        <label class="text-xs font-extrabold text-euNavy block">Select Religion</label>
+                        <input type="hidden" id="emcg-cp-religion-val" value="">
                         <div id="emcg-cp-religion-group" class="flex flex-wrap gap-2"></div>
                     </div>
 
                     <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2.5">
-                        <div class="flex items-center justify-between">
-                            <label class="text-xs font-extrabold text-euNavy">Marital Status</label>
-                            <input type="hidden" id="emcg-cp-marital-val" value="">
-                        </div>
+                        <label class="text-xs font-extrabold text-euNavy block">Marital Status</label>
+                        <input type="hidden" id="emcg-cp-marital-val" value="">
                         <div id="emcg-cp-marital-group" class="flex flex-wrap gap-2"></div>
                     </div>
 
@@ -4023,7 +3713,7 @@
                                 <label class="font-extrabold text-euNavy">Client Address</label>
                                 <button type="button" onclick="window.emcgShowAutoAddressOptions()" class="emcg-auto-trigger-btn">📍 Auto Show Addresses</button>
                             </div>
-                            <input type="text" id="emcg-cp-address-input" oninput="window.emcgSyncClientDetailsStep()" placeholder="Click button above to show & select address..." class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-medium text-euNavy">
+                            <input type="text" id="emcg-cp-address-input" oninput="window.emcgSyncClientDetailsStep()" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 font-medium text-euNavy">
                             <div id="emcg-cp-auto-address-list" class="hidden flex flex-col gap-1.5 pt-1"></div>
                         </div>
                     </div>
@@ -4053,47 +3743,17 @@
                     marGroup.appendChild(btn);
                 });
 
-                const saveBtn = card.querySelector('#emcg-save-details-btn');
-                if (saveBtn) {
-                    saveBtn.addEventListener('click', () => {
-                        window.emcgSyncClientDetailsStep();
-                        if (typeof window.showToast === 'function') {
-                            window.showToast('Client personal details saved.');
-                        }
-                    });
-                }
-
-                const profileView = document.getElementById('client-profile-view');
-                if (profileView && !profileView.dataset.emcgP9Observed) {
-                    profileView.dataset.emcgP9Observed = 'true';
-                    const obs = new MutationObserver(function () {
-                        if (!profileView.classList.contains('hidden')) {
-                            populateClientDetailsFromRecord();
-                        }
-                    });
-                    obs.observe(profileView, { attributes: true, attributeFilter: ['class'] });
-                }
-
-                populateClientDetailsFromRecord();
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', mountClientDetailsStep);
-            } else {
-                mountClientDetailsStep();
-            }
+                card.querySelector('#emcg-save-details-btn').addEventListener('click', () => {
+                    window.emcgSyncClientDetailsStep();
+                    showToast('Client personal details saved.');
+                });
+            };
         })();
     </script>
 
     <!-- PATCH #10 SCRIPT: CLIENT PORTFOLIO DELIGHTFUL LOOK & FEEL -->
     <script id="emcg-patch-10-script">
         (function () {
-            function getActiveClient() {
-                const pass = window.activeClientPassport;
-                if (!pass || !window.clientDB || !window.clientDB[pass]) return null;
-                return window.clientDB[pass];
-            }
-
             function escapeText(str) {
                 return String(str)
                     .replace(/&/g, '&amp;')
@@ -4101,18 +3761,17 @@
                     .replace(/>/g, '&gt;');
             }
 
-            function applyDelightfulPortfolioStyling() {
+            window.applyDelightfulPortfolioStyling = function () {
                 const profileView = document.getElementById('client-profile-view');
                 if (!profileView) return;
 
                 const banner = profileView.querySelector('.bg-gradient-to-r.from-euNavyDark');
                 if (banner) banner.classList.add('emcg-delight-welcome-banner');
 
-                const cards = profileView.querySelectorAll('.bg-white.rounded-3xl');
-                cards.forEach((card) => card.classList.add('emcg-delight-card'));
+                profileView.querySelectorAll('.bg-white.rounded-3xl').forEach((card) => card.classList.add('emcg-delight-card'));
 
-                const client = getActiveClient();
-                const nameText = (client && client.name) || document.getElementById('cp-name')?.textContent || 'Valued Applicant';
+                const client = (window.activeClientPassport && window.clientDB && window.clientDB[window.activeClientPassport]) || null;
+                const nameText = (client && client.name) || 'Valued Applicant';
                 const countryText = (client && client.country) || 'Europe';
                 const companyText = (client && client.companyName) || 'Verified European Sponsor';
                 const salaryText = (client && client.salary) || 'Guaranteed Package';
@@ -4145,34 +3804,7 @@
                         </div>
                     `;
                 }
-            }
-
-            if (typeof window.renderClientProfile === 'function' && !window.renderClientProfile.__emcgP10Hooked) {
-                const origRenderClientProfile = window.renderClientProfile;
-                const wrappedRender = function () {
-                    origRenderClientProfile.apply(this, arguments);
-                    applyDelightfulPortfolioStyling();
-                };
-                wrappedRender.__emcgP10Hooked = true;
-                window.renderClientProfile = wrappedRender;
-            }
-
-            const profileViewEl = document.getElementById('client-profile-view');
-            if (profileViewEl && !profileViewEl.dataset.emcgP10Observed) {
-                profileViewEl.dataset.emcgP10Observed = 'true';
-                const observer = new MutationObserver(function () {
-                    if (!profileViewEl.classList.contains('hidden')) {
-                        applyDelightfulPortfolioStyling();
-                    }
-                });
-                observer.observe(profileViewEl, { attributes: true, attributeFilter: ['class'] });
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', applyDelightfulPortfolioStyling);
-            } else {
-                applyDelightfulPortfolioStyling();
-            }
+            };
         })();
     </script>
 </body>
