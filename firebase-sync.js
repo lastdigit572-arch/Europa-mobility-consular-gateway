@@ -18,7 +18,9 @@ const normPassport = (v) => String(v || "").trim().toUpperCase();
 const normPin = (v) => String(v || "").trim();
 
 window.saveClientToFirestore = async function (clientData = {}) {
-  const passport_no = normPassport(clientData.passport_no || clientData.passportNumber || clientData.passport);
+  const passport_no = normPassport(
+    clientData.passport_no || clientData.passportNumber || clientData.passport
+  );
   const pin_code = normPin(clientData.pin_code || clientData.pin);
 
   if (!passport_no || !pin_code) {
@@ -27,11 +29,11 @@ window.saveClientToFirestore = async function (clientData = {}) {
 
   const record = {
     ...clientData,
+    passport: passport_no,
     passport_no,
-    pin_code,
     passportNumber: passport_no,
     pin: pin_code,
-    passport: passport_no,
+    pin_code,
     name: clientData.name || clientData.full_name || clientData.fullName || "",
     updatedAt: new Date().toISOString()
   };
@@ -64,55 +66,107 @@ window.loginClientFromFirestore = async function (passportInput, pinInput) {
   return { ok: true, data: record };
 };
 
-function hookAppWithFirestore() {
-  // ১. saveDB() কল হলে সব ক্লায়েন্টকে Firestore-এ সেভ করবে
-  if (typeof window.saveDB === "function" && !window.saveDB._fsHooked) {
-    const origSaveDB = window.saveDB;
-    window.saveDB = function (...args) {
-      const res = origSaveDB.apply(this, args);
-      try {
-        const dbObj = window.clientDB || {};
-        Object.values(dbObj).forEach((c) => {
-          if (c && (c.passport || c.passport_no || c.passportNumber) && (c.pin || c.pin_code)) {
-            window.saveClientToFirestore(c).catch(() => {});
-          }
-        });
-      } catch (e) {}
-      return res;
-    };
-    window.saveDB._fsHooked = true;
-  }
-
-  // ২. loginClientFromInputs() কল হলে আগে Firestore থেকে ক্লায়েন্ট এনে clientDB-তে বসাবে
-  if (typeof window.loginClientFromInputs === "function" && !window.loginClientFromInputs._fsHooked) {
-    const origLogin = window.loginClientFromInputs;
-    window.loginClientFromInputs = async function (passInputId, pinInputId) {
-      const passVal = normPassport(document.getElementById(passInputId)?.value);
-      const pinVal = normPin(document.getElementById(pinInputId)?.value);
-
-      if (passVal && pinVal) {
-        try {
-          const fsRes = await window.loginClientFromFirestore(passVal, pinVal);
-          if (fsRes.ok && fsRes.data) {
-            window.clientDB = window.clientDB || {};
-            const existing = window.clientDB[passVal] || {};
-            window.clientDB[passVal] = {
-              ...existing,
-              ...fsRes.data,
-              passport: passVal,
-              pin: pinVal,
-              name: fsRes.data.name || fsRes.data.full_name || existing.name || passVal
-            };
-          }
-        } catch (e) {}
+function syncAllClientDBToFirestore() {
+  try {
+    const dbObj = window.clientDB || {};
+    Object.values(dbObj).forEach((c) => {
+      if (c && (c.passport || c.passport_no || c.passportNumber) && (c.pin || c.pin_code)) {
+        window.saveClientToFirestore(c).catch((err) => console.error("Firestore save error:", err));
       }
-      return origLogin.apply(this, arguments);
-    };
-    window.loginClientFromInputs._fsHooked = true;
+    });
+  } catch (e) {
+    console.error("Sync loop error:", e);
   }
 }
 
+function attachFirestoreHooks() {
+  // ১. saveDB চললে Firestore-এ সেভ করবে
+  if (typeof window.saveDB === "function" && !window.saveDB._fsWrapped) {
+    const origSaveDB = window.saveDB;
+    window.saveDB = function (...args) {
+      const result = origSaveDB.apply(this, args);
+      syncAllClientDBToFirestore();
+      return result;
+    };
+    window.saveDB._fsWrapped = true;
+  }
+
+  // ২. লগইন বাটন/ফর্মে ক্লিক করলে আগে Firestore থেকে ডেটা এনে clientDB-তে বসাবে
+  const loginBtns = document.querySelectorAll(
+    'button[onclick*="loginClientFromInputs"], button[onclick*="loginClient"]'
+  );
+
+  loginBtns.forEach((btn) => {
+    if (btn.dataset.fsLoginBound) return;
+    btn.dataset.fsLoginBound = "1";
+
+    btn.addEventListener(
+      "click",
+      async function (e) {
+        const passEl =
+          document.getElementById("modal-passport-input") ||
+          document.getElementById("quick-passport");
+        const pinEl =
+          document.getElementById("modal-pin-input") ||
+          document.getElementById("quick-pin");
+
+        const pVal = normPassport(passEl?.value);
+        const pinVal = normPin(pinEl?.value);
+
+        if (!pVal || !pinVal) return;
+
+        // ইতিমধ্যে লোকাল clientDB-তে থাকলে আলাদা করে আটকাবে না
+        if (window.clientDB && window.clientDB[pVal] && normPin(window.clientDB[pVal].pin) === pinVal) {
+          return;
+        }
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        try {
+          const res = await window.loginClientFromFirestore(pVal, pinVal);
+          if (res.ok && res.data) {
+            window.clientDB = window.clientDB || {};
+            window.clientDB[pVal] = {
+              ...res.data,
+              passport: pVal,
+              pin: pinVal,
+              name: res.data.name || res.data.full_name || pVal
+            };
+            if (typeof window.saveDB === "function" && window.saveDB._fsWrapped) {
+              // শুধু localStorage-এ রাখার জন্য
+              try {
+                localStorage.setItem("emcg_client_dossiers_v4", JSON.stringify(window.clientDB));
+              } catch (_) {}
+            }
+            if (typeof window.closeModal === "function") {
+              window.closeModal("client-login-modal");
+            }
+            window.activeClientPassport = pVal;
+            if (typeof window.renderClientProfile === "function") {
+              window.renderClientProfile(window.clientDB[pVal]);
+            }
+          } else {
+            if (typeof window.showToast === "function") {
+              window.showToast(res.error || "Access Denied: Invalid Passport Number or Security PIN.");
+            } else {
+              alert(res.error || "Invalid Passport or PIN.");
+            }
+          }
+        } catch (err) {
+          console.error("Firestore login error:", err);
+          if (typeof window.showToast === "function") {
+            window.showToast("Network/Database error while checking client record.");
+          }
+        }
+      },
+      true
+    );
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  hookAppWithFirestore();
-  setTimeout(hookAppWithFirestore, 500);
+  attachFirestoreHooks();
+  setTimeout(attachFirestoreHooks, 400);
+  setTimeout(attachFirestoreHooks, 1200);
 });
