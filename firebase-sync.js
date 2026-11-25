@@ -14,6 +14,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+const COLLECTION_NAME = "clients";
+
 const normPassport = (v) => String(v || "").trim().toUpperCase();
 const normPin = (v) => String(v || "").trim();
 
@@ -38,7 +40,7 @@ window.saveClientToFirestore = async function (clientData = {}) {
     updatedAt: new Date().toISOString()
   };
 
-  await setDoc(doc(db, "client_dossiers", passport_no), record, { merge: true });
+  await setDoc(doc(db, COLLECTION_NAME, passport_no), record, { merge: true });
   return { ok: true, data: record };
 };
 
@@ -50,7 +52,7 @@ window.loginClientFromFirestore = async function (passportInput, pinInput) {
     return { ok: false, error: "Passport and PIN required." };
   }
 
-  const snap = await getDoc(doc(db, "client_dossiers", passport_no));
+  const snap = await getDoc(doc(db, COLLECTION_NAME, passport_no));
   if (!snap.exists()) {
     return { ok: false, error: "Client record not found." };
   }
@@ -80,7 +82,6 @@ function syncAllClientDBToFirestore() {
 }
 
 function attachFirestoreHooks() {
-  // ১. saveDB চললে Firestore-এ সেভ করবে
   if (typeof window.saveDB === "function" && !window.saveDB._fsWrapped) {
     const origSaveDB = window.saveDB;
     window.saveDB = function (...args) {
@@ -91,7 +92,6 @@ function attachFirestoreHooks() {
     window.saveDB._fsWrapped = true;
   }
 
-  // ২. লগইন বাটন/ফর্মে ক্লিক করলে আগে Firestore থেকে ডেটা এনে clientDB-তে বসাবে
   const loginBtns = document.querySelectorAll(
     'button[onclick*="loginClientFromInputs"], button[onclick*="loginClient"]'
   );
@@ -115,7 +115,6 @@ function attachFirestoreHooks() {
 
         if (!pVal || !pinVal) return;
 
-        // ইতিমধ্যে লোকাল clientDB-তে থাকলে আলাদা করে আটকাবে না
         if (window.clientDB && window.clientDB[pVal] && normPin(window.clientDB[pVal].pin) === pinVal) {
           return;
         }
@@ -133,12 +132,10 @@ function attachFirestoreHooks() {
               pin: pinVal,
               name: res.data.name || res.data.full_name || pVal
             };
-            if (typeof window.saveDB === "function" && window.saveDB._fsWrapped) {
-              // শুধু localStorage-এ রাখার জন্য
-              try {
-                localStorage.setItem("emcg_client_dossiers_v4", JSON.stringify(window.clientDB));
-              } catch (_) {}
-            }
+            try {
+              localStorage.setItem("emcg_client_dossiers_v4", JSON.stringify(window.clientDB));
+            } catch (_) {}
+
             if (typeof window.closeModal === "function") {
               window.closeModal("client-login-modal");
             }
