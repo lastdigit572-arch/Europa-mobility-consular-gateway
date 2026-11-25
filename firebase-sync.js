@@ -17,15 +17,20 @@ const db = getFirestore(app);
 const normPassport = (v) => String(v || "").trim().toUpperCase();
 const normPin = (v) => String(v || "").trim();
 
-window.saveClientToFirestore = async function (clientData) {
-  const passport_no = normPassport(clientData.passport_no);
-  const pin_code = normPin(clientData.pin_code);
-  if (!passport_no || !pin_code) return { ok: false, error: "Passport and PIN required." };
+window.saveClientToFirestore = async function (clientData = {}) {
+  const passport_no = normPassport(clientData.passport_no || clientData.passportNumber);
+  const pin_code = normPin(clientData.pin_code || clientData.pin);
+
+  if (!passport_no || !pin_code) {
+    return { ok: false, error: "Passport and PIN required." };
+  }
 
   const record = {
     ...clientData,
     passport_no,
     pin_code,
+    passportNumber: passport_no,
+    pin: pin_code,
     updatedAt: new Date().toISOString()
   };
 
@@ -36,13 +41,22 @@ window.saveClientToFirestore = async function (clientData) {
 window.loginClientFromFirestore = async function (passportInput, pinInput) {
   const passport_no = normPassport(passportInput);
   const pin_code = normPin(pinInput);
-  if (!passport_no || !pin_code) return { ok: false, error: "Passport and PIN required." };
+
+  if (!passport_no || !pin_code) {
+    return { ok: false, error: "Passport and PIN required." };
+  }
 
   const snap = await getDoc(doc(db, "client_dossiers", passport_no));
-  if (!snap.exists()) return { ok: false, error: "Client record not found." };
+  if (!snap.exists()) {
+    return { ok: false, error: "Client record not found." };
+  }
 
   const record = snap.data();
-  if (normPin(record.pin_code) !== pin_code) return { ok: false, error: "Invalid PIN." };
+  const savedPin = normPin(record.pin_code || record.pin);
+
+  if (savedPin !== pin_code) {
+    return { ok: false, error: "Invalid PIN." };
+  }
 
   window.currentLoggedInClient = record;
   return { ok: true, data: record };
@@ -66,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (typeof window.renderClientProfile === "function") {
         window.renderClientProfile(res.data);
       } else {
-        alert("Login Success: " + (res.data.full_name || res.data.passport_no));
+        alert("Login Success: " + (res.data.full_name || res.data.fullName || res.data.passport_no));
       }
     });
   }
